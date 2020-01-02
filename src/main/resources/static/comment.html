@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>商品评价页面</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Flatro Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+<script type="application/x-javascript">
+	
+	
+	
+	
+	 addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
+
+
+
+
+</script>
+<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<!-- Custom Theme files -->
+<link href="css/style.css" rel='stylesheet' type='text/css' />
+<!-- Custom Theme files -->
+<!--webfont-->
+<link href='#css?family=Lato:100,200,300,400,500,600,700,800,900' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<!-- start menu -->
+<script src="js/jquery.easydropdown.js"></script>
+<link href="css/megamenu.css" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="js/megamenu.js"></script>
+<script>
+	$(document).ready(function() {
+		$(".megamenu").megamenu();
+	});
+</script>
+<link rel="stylesheet" href="css/etalage.css">
+<script src="js/jquery.etalage.min.js"></script>
+<script>
+	jQuery(document)
+			.ready(
+					function($) {
+
+						$('#etalage')
+								.etalage(
+										{
+											thumb_image_width : 300,
+											thumb_image_height : 400,
+											source_image_width : 900,
+											source_image_height : 1200,
+											show_hint : true,
+											click_callback : function(
+													image_anchor, instance_id) {
+												swal('Callback example:\nYou clicked on an image with the anchor: "'
+														+ image_anchor
+														+ '"\n(in Etalage instance: "'
+														+ instance_id + '")');
+											}
+										});
+
+					});
+</script>
+<!--initiate accordion-->
+<script type="text/javascript">
+	$(function() {
+
+		var menu_ul = $('.menu_drop > li > ul'), menu_a = $('.menu_drop > li > a');
+
+		menu_ul.hide();
+
+		menu_a.click(function(e) {
+			e.preventDefault();
+			if (!$(this).hasClass('active')) {
+				menu_a.removeClass('active');
+				menu_ul.filter(':visible').slideUp('normal');
+				$(this).addClass('active').next().stop(true, true).slideDown(
+						'normal');
+			} else {
+				$(this).removeClass('active');
+				$(this).next().stop(true, true).slideUp('normal');
+			}
+		});
+
+	});
+</script>
+<script>
+	$(document).ready(function(c) {
+		$('.alert-close').on('click', function(c) {
+			$('.message').fadeOut('slow', function(c) {
+				$('.message').remove();
+			});
+		});
+	});
+</script>
+<script>
+	$(document).ready(function(c) {
+		$('.alert-close1').on('click', function(c) {
+			$('.message1').fadeOut('slow', function(c) {
+				$('.message1').remove();
+			});
+		});
+	});
+	
+	$(document).ready(function(c) {
+		$('.alert-close1').on('click', function(c) {
+			$('.message1').fadeOut('slow', function(c) {
+				$('.message1').remove();
+			});
+		});
+	});
+</script>
+
+
+<!-- 引入全局函数myFunction.js -->
+<script type="text/javascript" src="js/myFunction.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+function getUrlParam(url,parm) {
+    var reg = new RegExp("(^|&)" + parm + "=([^&]*)(&|$)");
+    var r = url.substr(url.indexOf("\?") + 1).match(reg);
+    if (r != null) return decodeURI(r[2]);
+    return null;
+}
+
+
+$(document).ready(function() {
+	var proId=getUrlParam(location.href, "proId");
+	//proId=1;
+	$.ajax({
+		type : 'post',
+		data:{proId,proId},
+		url : 'commentProNameServlet',
+		success : function(msg) {
+			$("#proNameDiv").html(msg);
+		}
+	});
+});
+
+$(function(){
+	
+	$("#OKbtn").click(function(){
+		var proId=getUrlParam(location.href, "proId");
+		var orderPkid=getUrlParam(location.href, "orderPkid");
+		//swal(orderPkid);
+		var commentDes=$("#commentDesDiv").val();
+		//swal("commentdDes="+commentDes);
+		var mydate=new Date();
+		var year=mydate.getFullYear();
+		var month=mydate.getMonth();
+		var date=mydate.getDate();
+		var hour=mydate.getHours();
+		var min=mydate.getMinutes();
+		var sec=mydate.getSeconds();
+		var commentTime=year+"-"+month+"-"+date+" "+hour+":"+min+":"+sec;
+		//swal(commentTime);
+		//proId=1;
+		$.ajax({
+			type:'post',
+			url:"addCommentServlet",
+			data:{proId:proId,commentDes:commentDes,commentTime:commentTime,orderPkid:orderPkid},
+			success:function(msg){
+				swal(msg);
+				document.location.href="personal.html";
+			}
+		});
+		
+		
+	});
+	
+	$("#cancle").click(function(){
+		document.location.href="personal.html";
+	});
+});
+
+$(document).ready(function() {
+	init();
+	
+
+})
+</script>
+</head>
+<body>
+
+	<div class="header_top">
+		<div class="container">
+
+			<div class="cssmenu">
+				<ul>
+					<li class="active">
+						<a href="login.html" id="account">请登录</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="header_bottom men_border">
+		<div class="container">
+			<div class="col-xs-9 header-bottom-left">
+				<div class="col-xs-2 logo">
+					<h1>
+						<a href="index.html">
+							<span>Buy</span>
+							shop
+						</a>
+					</h1>
+				</div>
+				<div class="col-xs-7 menu">
+					<ul class="megamenu skyblue">
+						<!-- <li class="active grid"> -->
+						<li class="grid">
+							<a class="color1" id="meun" href="search.html?searchdata=男">男装</a>
+						</li>
+						<li class="grid">
+							<a class="color2" id="meun" href="search.html?searchdata=女">女装</a>
+						</li>
+
+					</ul>
+				</div>
+			</div>
+
+			<div class="col-xs-3 header-bottom-right">
+				<ul class="icon1 sub-icon1 profile_img">
+					<li>
+						<a class="active-icon c1" onmouseover="toShowShopCarItem()" href="#"> </a>
+						<ul class="sub-icon1 list" id="shopCarItemListDiv">
+							<div class="login_buttons">
+								<div class="login_button">
+									<a href="login.html">登录</a>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+						</ul>
+					</li>
+				</ul>
+				<div class="search">
+					<input id="Sea" type="text" name="s" class="textbox" value="搜索" onfocus="this.value = '';"> <input type="submit" value="搜索" id="submit" name="submit" onclick="search()">
+					<div id="response"></div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<br>
+	<center>
+	<h4 style="margin: 50px;">您购买的商品：</h4>
+	<div type="text" id="proNameDiv" style="width: 450px; height: 30px; border-bottom: 2px solid gray; "></div>
+	<textarea id="commentDesDiv" type="text" style="width: 500px; height: 200px; border: 2px solid gray; margin: 30px 50px;" placeholder="请写下您对我们商品的评价";></textarea>
+	<br>
+	<input id="OKbtn" type="button" value="确定"  class="btn btn-default"/>
+	<input id="cancle" type="button" value="取消"  class="btn btn-default"/>
+</center>
+</body>
+</html>

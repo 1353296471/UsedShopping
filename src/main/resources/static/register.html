@@ -1,0 +1,292 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>注册</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Flatro Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template, 
+	Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyErricsson, Motorola web design" />
+<script type="application/x-javascript">
+	
+	
+	
+	
+	
+	 addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
+
+
+
+
+
+</script>
+<link href="css/bootstrap.css" rel='stylesheet' type='text/css' />
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<!-- Custom Theme files -->
+<link href="css/style.css" rel='stylesheet' type='text/css' />
+<!-- Custom Theme files -->
+<!--webfont-->
+<link href='#css?family=Lato:100,200,300,400,500,600,700,800,900' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<!-- start menu -->
+<link href="css/megamenu.css" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="js/megamenu.js"></script>
+<!-- 引入全局函数myFunction.js -->
+<script type="text/javascript" src="js/myFunction.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<link href="bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+
+<script>
+	$(document).ready(function() {
+		$(".megamenu").megamenu();
+	});
+</script>
+<script>
+	$(document).ready(function(c) {
+		$('.alert-close').on('click', function(c) {
+			$('.message').fadeOut('slow', function(c) {
+				$('.message').remove();
+			});
+		});
+	});
+</script>
+<script>
+	$(document).ready(function(c) {
+		$('.alert-close1').on('click', function(c) {
+			$('.message1').fadeOut('slow', function(c) {
+				$('.message1').remove();
+			});
+		});
+	});
+</script>
+
+<script>
+	function checkMail() {
+		var falg = false;
+		var email = $(".email").val();
+		if (checkEmail(email)) {
+			$.ajax({
+				async : false,
+				type : 'post',
+				url : 'isCheck/' + email,
+				success : function(msg) {
+					if (msg == "isCheck") {
+						swal("邮箱已经被注册！请重新输入！");
+					} else {
+						falg = true;
+					}
+				}
+			});
+		}
+		return falg;
+	}
+
+	function checkPassword() {
+		var falg = false;
+		var confirmPassowrd = $(".confirmPassowrd").val();
+		var password = $(".password").val();
+		if (password != confirmPassowrd) {
+			swal("两次密码不一致！请重新输入！");
+		} else if (password == "") {
+			swal("密码不能为空！");
+		} else {
+			falg = true;
+		}
+		return falg;
+	}
+
+	function checkUserName() {
+		var falg = false;
+		var userName = $(".userName").val();
+		if (userName == "") {
+			swal("用户名不能为空！");
+		} else {
+			falg = true;
+		}
+		return falg;
+	}
+
+	function checkCode() {
+		var falg = false;
+		var code = $(".code").val();
+		if (code == "") {
+			swal("验证码不能为空！");
+		} else {
+			$.ajax({
+				async : false,
+				type : 'post',
+				url : 'isCode/' + code,
+				success : function(msg) {
+					if (!msg) {
+						swal("验证码不正确！请重新输入！");
+					} else {
+						falg = true;
+					}
+				}
+			});
+		}
+		return falg;
+	}
+
+	function sendCode() {
+		var email = $(".email").val();
+		
+		if (checkMail()) {
+			swal("发送成功！");
+			$.ajax({
+				type : 'post',
+				url : 'sendCode/' + email,
+				success : function(msg) {
+					if (!msg) {
+						swal("发送失败！");
+					} else {
+						swal("发送成功！");
+					}
+				}
+			});
+		}
+		
+	}
+
+	// 前端数据校验
+	$(function() {
+		//判断邮箱格式是否输入正确
+		$(".email").change(function() {
+			checkMail();
+		})
+
+		$(".confirmPassowrd").change(function() {
+			checkPassword();
+		})
+
+		$(".userName").change(function() {
+			checkUserName();
+		})
+
+		$(".code").change(function() {
+			//checkCode();
+		})
+	})
+
+	function toregister() {
+		var user = {
+			userName : $(".userName").val(),
+			email : $(".email").val(),
+			password : $(".password").val()
+		};
+		if (checkUserName() && checkMail() && checkPassword() && checkCode()) {
+			swal("注册成功！");
+			window.location.href = 'login.html';
+			$.ajax({
+				type : 'post',
+				url : 'register',
+				contentType : "application/json;charset=utf-8",
+				data : JSON.stringify(user),
+				success : function(data) {
+					if (data == "isRegister") {
+						swal("注册成功！");
+						window.location.href = 'login.html';
+					} else {
+						swal(data);
+					}
+				}
+			});
+		}
+
+	}
+</script>
+
+</head>
+<body>
+	<div class="header_top">
+		<div class="container">
+			 
+			<div class="cssmenu">
+				<ul>
+					<li class="active">
+						<a href="login.html" id="account">请登录</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="header_bottom men_border">
+		<div class="container">
+			<div class="col-xs-9 header-bottom-left">
+				<div class="col-xs-2 logo">
+					<h1>
+						<a href="index.html">
+							<span>Buy</span>
+							shop
+						</a>
+					</h1>
+				</div>
+				<div class="col-xs-7 menu">
+					<ul class="megamenu skyblue">
+						<li class="grid">
+							<a class="color1" id="meun" href="search.html?searchdata=男">男装</a>
+						</li>
+						<li class="grid">
+							<a class="color2" id="meun" href="search.html?searchdata=女">女装</a>
+						</li>
+						 
+					</ul>
+				</div>
+			
+			<div class="clearfix"></div>
+		</div>
+	</div>
+	<div class="single_top">
+		<div class="container">
+			
+			<div class="register">
+			<div class="form-group">
+			
+				<div class="register-top-grid">
+					<h3>个人信息</h3>
+					<div class="form-group">
+						<label for="exampleInputPassword1">用户名</label> 
+						<input type="text" name="userName" class="form-control userName">
+						
+						<label for="exampleInputPassword1">邮箱</label> 
+						<input type="text" name="email" class="form-control email"> 
+						<label for="exampleInputPassword1">验证码</label> 
+						<input type="text" name="code" class="form-control code">
+						<input type="button" value="发送验证码" onclick="sendCode()"  class="btn btn-primary" >
+						<br><br>
+						
+						<label for="exampleInputPassword1">密码</label> 
+						<input type="Password" name="password" class="form-control password" >
+						<label for="exampleInputPassword1">确认密码</label> 
+						<input type="Password" name="confirmPassowrd" class="form-control confirmPassowrd">
+					<div class="clearfix"></div>
+					<div class="clearfix"></div>
+						
+					</div>
+					
+					
+					
+					 
+					
+				</div>
+				<div class="register-bottom-grid">
+					
+				</div>
+
+				<div class="clearfix"></div>
+				<div class="register-but">
+					<form action="#">
+						<input type="submit" value="注册" onclick="toregister()">
+						<div class="clearfix"></div>
+					</form>
+				</div>
+			</div>
+			
+			 
+		</div>
+	</div>
+	 
+</body>
+</html>
