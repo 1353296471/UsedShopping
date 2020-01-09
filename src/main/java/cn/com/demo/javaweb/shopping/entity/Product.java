@@ -5,6 +5,15 @@ public class Product {
 	private String proName;
 	private double price;
 	private int catalogId;
+	private int userId;
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 
 	public int getCatalogId() {
 		return catalogId;

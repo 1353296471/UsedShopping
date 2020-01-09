@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.com.demo.javaweb.shopping.db.DaoUtils;
+import cn.com.demo.javaweb.shopping.entity.Warehouse;
 import cn.com.single.DAO.WareHouseDAO;
 import cn.com.single.db.DBConnection;
 
@@ -151,6 +153,12 @@ public class WareHouseDAOImpl implements WareHouseDAO {
 			DBConn.close(conn, pstm, rs);
 		}
 		return wareId;
+	}
+
+	@Override
+	public int findWareId(int proId) {
+		String sql = "select * from warehouse where proId = ?";
+		return DaoUtils.getListBySql(Warehouse.class, sql, proId).get(0).getId();
 	}
 
 }

@@ -39,4 +39,10 @@ public class WarehouseServiceImpl implements WareHouseService {
 		return this.warehouseDao.findWareId(colorType, sizeType, proId);
 	}
 
+	@Override
+	public int findWareId(int proId) {
+		// TODO 自动生成的方法存根
+		return this.warehouseDao.findWareId(proId);
+	}
+
 }

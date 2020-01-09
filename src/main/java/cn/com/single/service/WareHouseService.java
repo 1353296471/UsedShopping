@@ -14,4 +14,6 @@ public interface WareHouseService {
 	public int findSize(String sizeTye);
 
 	public int findWareId(String colorType, String sizeType, int proId);
+
+	public int findWareId(int proId);
 }

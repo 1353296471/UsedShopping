@@ -12,9 +12,11 @@ import cn.com.demo.javaweb.shopping.dao.IProDao;
 import cn.com.demo.javaweb.shopping.dao.IReceiveDao;
 import cn.com.demo.javaweb.shopping.dao.IShopCarDao;
 import cn.com.demo.javaweb.shopping.dao.IShowOrderListDao;
+import cn.com.demo.javaweb.shopping.dao.IShowProductAdminDao;
 import cn.com.demo.javaweb.shopping.dao.IUserDao;
 import cn.com.demo.javaweb.shopping.dao.IWarehouseDao;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowOrderList;
+import cn.com.demo.javaweb.shopping.entity.toshow.ShowProductAdmin;
 import cn.com.demo.javaweb.shopping.service.IPersonalService;
 
 @Service
@@ -43,6 +45,8 @@ public class IPersonalServiceImpl implements IPersonalService {
 
 	@Autowired
 	private IShowOrderListDao showOrderListDao;
+	@Autowired
+	private IShowProductAdminDao showProductAdminDao;
 
 	@Override
 	public List<ShowOrderList> getShowOrderLists(int userId) {
@@ -119,5 +123,31 @@ public class IPersonalServiceImpl implements IPersonalService {
 		double cash = 0;
 		cash = userDao.getUserById(userId).getMoney();
 		return cash;
+	}
+
+	@Override
+	public List<ShowProductAdmin> getAllShowMyPostedByPage(int pageNo, int pageSize, int userId) {
+		int index = (pageNo - 1) * pageSize;
+		List<ShowProductAdmin> itemsPage = showProductAdminDao.getAllShowMyPostedByPage(index, pageSize, userId);
+		return itemsPage;
+	}
+
+	@Override
+	public int getProMaxPage(int pageSize, int userId) {
+		int maxPage = (showProductAdminDao.getAllShowMyPosted(userId).size() + pageSize - 1) / pageSize;
+		return maxPage;
+	}
+
+	@Override
+	public List<ShowOrderList> getAllShowMySoldByPage(int pageNo, int pageSize, int userId) {
+		int index = (pageNo - 1) * pageSize;
+		List<ShowOrderList> itemsPage = showOrderListDao.getAllShowMySoldByPage(index, pageSize, userId);
+		return itemsPage;
+	}
+
+	@Override
+	public int getMySoldMaxPage(int pageSize, int userId) {
+		int maxPage = (showOrderListDao.getAllShowMySold(userId).size() + pageSize - 1) / pageSize;
+		return maxPage;
 	}
 }

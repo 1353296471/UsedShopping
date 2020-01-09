@@ -3,22 +3,23 @@ package cn.com.demo.mvc.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.single.servlet.AddCommentServlet;
 import cn.com.single.servlet.CommentCountServlet;
 import cn.com.single.servlet.CommentProNameServlet;
-import cn.com.single.servlet.GetWareIdServlet;
+import cn.com.single.servlet.GetWareIdUsedServlet;
 import cn.com.single.servlet.ProCommentServlet;
 import cn.com.single.servlet.ProImgServlet;
 import cn.com.single.servlet.ProductDesServlet;
 import cn.com.single.servlet.ProductServlet;
 import cn.com.single.servlet.RelatedImgServlet;
-import cn.com.single.servlet.WareHouseColorServlet;
 import cn.com.single.servlet.WareHouseServlet;
 import cn.com.single.servlet.WarehouseNumServlet;
 
-public class SingleController {
+@Controller
+public class SingleControllerUsed {
 
 	@RequestMapping("/commentCountServlet")
 	public void commentCountServlet(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -36,17 +37,12 @@ public class SingleController {
 	public void productDesServlet(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ProductDesServlet s = new ProductDesServlet();
 		s.service(request, response);
+
 	}
 
 	@RequestMapping("/productServlet")
 	public void productServlet(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ProductServlet s = new ProductServlet();
-		s.service(request, response);
-	}
-
-	@RequestMapping("/wareHouseColorServlet")
-	public void wareHouseColorServlet(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		WareHouseColorServlet s = new WareHouseColorServlet();
 		s.service(request, response);
 	}
 
@@ -88,7 +84,10 @@ public class SingleController {
 
 	@RequestMapping("/getWareIdServlet")
 	public void getWareIdServlet(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		GetWareIdServlet s = new GetWareIdServlet();
+//		GetWareIdServlet s = new GetWareIdServlet();
+//		s.service(request, response);
+
+		GetWareIdUsedServlet s = new GetWareIdUsedServlet();
 		s.service(request, response);
 
 	}

@@ -9,6 +9,15 @@ public class ShowProductAdmin {
 	private String sex;
 	private String catalogTypeOne;
 	private String catalogTypeTwo;
+	private String proDes;
+
+	public String getProDes() {
+		return proDes;
+	}
+
+	public void setProDes(String proDes) {
+		this.proDes = proDes;
+	}
 
 	public int getCatalogId() {
 		return catalogId;

@@ -15,8 +15,7 @@
 						<div class="list_desc">
 							<h4>
 								<a href="#">${item.showProduct.pro.proName }</a>
-								<a>${item.colorType }</a>
-								<a>${item.sizeType }</a>
+								
 							</h4>
 							<input type="button" name="remove" value="-" onclick="remove(${item.warehouseId })" >
 							<input name="countDiv" type="text" id="countNum" disabled="disabled" value='${item.num }' size="2" style="text-align: center" />

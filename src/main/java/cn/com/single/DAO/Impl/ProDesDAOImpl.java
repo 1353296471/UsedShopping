@@ -29,10 +29,11 @@ public class ProDesDAOImpl implements ProDesDAO {
 				des = rs.getString("proDes");
 			}
 			describeList = new ArrayList<String>();
-			String arg[] = des.split("；");
-			for (int i = 0; i < arg.length; i++) {
-				describeList.add(arg[i]);
-			}
+//			String arg[] = des.split("；");
+//			for (int i = 0; i < arg.length; i++) {
+//				describeList.add(arg[i]);
+//			}
+			describeList.add(des);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

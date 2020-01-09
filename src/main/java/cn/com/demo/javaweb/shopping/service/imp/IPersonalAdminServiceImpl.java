@@ -5,10 +5,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.com.demo.javaweb.shopping.dao.IImgDao;
 import cn.com.demo.javaweb.shopping.dao.IOrderDao;
 import cn.com.demo.javaweb.shopping.dao.IProDao;
+import cn.com.demo.javaweb.shopping.dao.IProDesDao;
 import cn.com.demo.javaweb.shopping.dao.IReceiveDao;
 import cn.com.demo.javaweb.shopping.dao.IShopCarDao;
 import cn.com.demo.javaweb.shopping.dao.IShowOrderListDao;
@@ -16,11 +18,14 @@ import cn.com.demo.javaweb.shopping.dao.IShowProductAdminDao;
 import cn.com.demo.javaweb.shopping.dao.IShowWarehouseDao;
 import cn.com.demo.javaweb.shopping.dao.IUserDao;
 import cn.com.demo.javaweb.shopping.dao.IWarehouseDao;
+import cn.com.demo.javaweb.shopping.entity.ProDes;
+import cn.com.demo.javaweb.shopping.entity.Product;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowOrderList;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowProductAdmin;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowWarehouse;
 import cn.com.demo.javaweb.shopping.service.IPersonalAdminService;
 
+@Transactional
 @Service
 public class IPersonalAdminServiceImpl implements IPersonalAdminService {
 
@@ -53,6 +58,9 @@ public class IPersonalAdminServiceImpl implements IPersonalAdminService {
 
 	@Autowired
 	private IShowProductAdminDao showProductAdminDao;
+
+	@Autowired
+	private IProDesDao proDesDao;
 
 	@Override
 	public List<ShowOrderList> getShowOrderLists(int userId) {
@@ -124,13 +132,30 @@ public class IPersonalAdminServiceImpl implements IPersonalAdminService {
 	@Override
 	public boolean updateShowProductAdmin(ShowProductAdmin showProductAdmin) {
 		boolean flag = false;
-		flag = showProductAdminDao.updateShowProductAdmin(showProductAdmin);
+		// flag = showProductAdminDao.updateShowProductAdmin(showProductAdmin);
+		Product pro = new Product();
+		pro.setId(showProductAdmin.getProId());
+		pro.setPrice(showProductAdmin.getPrice());
+		pro.setProName(showProductAdmin.getProName());
+
+		ProDes proDes = new ProDes();
+		proDes.setProDesPkid(showProductAdmin.getProId());
+		proDes.setProDes(showProductAdmin.getProDes());
+		if (proDesDao.getProDes(showProductAdmin.getProId()) != null) {
+			if (proDesDao.updateProDes(proDes) && proDao.updateProduct(pro)) {
+				flag = true;
+			}
+		} else {
+			if (proDesDao.addProDes(proDes) && proDao.updateProduct(pro)) {
+				flag = true;
+			}
+		}
 		return flag;
 	}
 
 	@Override
 	public boolean toDeletePro(int proId) {
 		// TODO 自动生成的方法存根
-		return showProductAdminDao.toDeletePro(proId);
+		return proDao.toDeletePro(proId);
 	}
 }

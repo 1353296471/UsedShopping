@@ -55,6 +55,7 @@ function toUpdatePro(id) {
 			if(pro != null){
 				$("#model_proName").val(pro.proName);
 				$("#model_price").val(pro.price);
+				$("#model_proDes").val(pro.proDes);
 			}
 		}
 	});
@@ -76,7 +77,8 @@ $("#emp_update_btn").click(function(){
 	var pro = {
 			 proId : $("#emp_update_btn").attr("edit-id"),
 			 proName : $("#model_proName").val(),
-			 price : $("#model_price").val()
+			 price : $("#model_price").val(),
+			 proDes : $("#model_proDes").val()
 		};
 	
 	
@@ -155,10 +157,23 @@ $("#emp_update_btn").click(function(){
 							<span class="help-block"></span>
 						</div>
 					</div>
+					
 					<div class="form-group">
 						<label class="col-sm-2 control-label">价格</label>
 						<div class="col-sm-10">
 							<input type="number" name="email" class="form-control" id="model_price">
+							<span class="help-block"></span>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商品描述</label>
+						<div class="col-sm-10">
+						<!-- 
+						<input type="text" name="proDes" class="form-control" id="model_proDes">
+						 -->
+							
+							<textarea class="form-control" rows="10" name="proDes" id="model_proDes"></textarea>
 							<span class="help-block"></span>
 						</div>
 					</div>
@@ -184,17 +199,13 @@ $("#emp_update_btn").click(function(){
 					</div>
 					<div class="list_desc">
 						<h3>
-							<a href="#">${item.proName }</a>
+							<a href="tosingle/${item.proId}">${item.proName }</a>
 						</h3>
 						价格：
 						<span class="actual"> ￥${item.price }</span>
 						<br>
-						款式：
-						<span class="actual"> ${item.sex }</span>
-						&nbsp;
+						类别：
 						<span class="actual"> ${item.catalogTypeOne }</span>
-						&nbsp;
-						<span class="actual"> ${item.catalogTypeTwo }</span>
 						&nbsp;
 
 					</div>

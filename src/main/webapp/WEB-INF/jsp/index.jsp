@@ -38,9 +38,9 @@
 		<div class="about-block-content">
 			<div class="border-add"></div>
 			<h2>关于我们</h2>
-			<p>这是我们的个人服装品牌BUYSHOP</p>
-			<p>每一件衣服都是我们用心制作出来的，选自上好的布料</p>
-			<p>希望你能在这里找到让你满意的衣服</p>
+			<p>这是我们的二手交易平台--BUYSHOP</p>
+			
+			<p>希望你能在这里找到让你满意的商品</p>
 		</div>
 		<img src="images/pic9.jpg" class="img-responsive" alt="" />
 	</div>

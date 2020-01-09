@@ -80,16 +80,15 @@ function toSendOrder(orderPkid){
 
 						<c:if test="${2 eq item.orderConditionPkid}">
 							<c:if test="${0 eq item.commentPkid}">
-								<c:if test="${sessionScope.status == 'admin'}">
-									<a>尚未评价</a>
-								</c:if>
-								<c:if test="${sessionScope.status == 'user'}">
-									<a href="comment.html?proId=${item.proId}&orderPkid=${item.orderPkid}">去评价</a>
-								</c:if>
+
+								<a>尚未评价</a>
+
+
 							</c:if>
 							<c:if test="${0 != item.commentPkid}">
 								<a>已评价</a>
-								<br><br>
+								<br>
+								<br>
 								<c:if test="${!empty item.commentDes }">
 								评论：<br>
 									<span class="actual"> ${item.commentDes }</span>
@@ -98,17 +97,17 @@ function toSendOrder(orderPkid){
 						</c:if>
 					</div>
 
-					<c:if test="${sessionScope.status == 'admin'}">
-						<div class="check_button">
-							<c:if test="${item.orderConditionPkid eq 1}">
-								<a href="#" onclick="toSendOrder(${item.orderPkid})">确认发货</a>
-							</c:if>
-							<c:if test="${item.orderConditionPkid eq 2}">
-								<a> ${item.conditionType }</a>
-								<br>
-							</c:if>
-						</div>
-					</c:if>
+
+					<div class="check_button">
+						<c:if test="${item.orderConditionPkid eq 1}">
+							<a href="#" onclick="toSendOrder(${item.orderPkid})">确认发货</a>
+						</c:if>
+						<c:if test="${item.orderConditionPkid eq 2}">
+							<a> ${item.conditionType }</a>
+							<br>
+						</c:if>
+					</div>
+
 
 
 					<div class="clearfix"></div>
@@ -123,13 +122,13 @@ function toSendOrder(orderPkid){
 		共${requestScope.page.maxPage }页，当前第${requestScope.page.pageNo }页
 		<br>
 		<br>
-		<a href="#" onclick="toOrderListPage(${requestScope.page.fristPage })">首页</a>
+		<a href="#" onclick="toOrderListSoldPage(${requestScope.page.fristPage })">首页</a>
 		&nbsp;&nbsp;
-		<a href="#" onclick="toOrderListPage(${requestScope.page.beforePage })">上一页</a>
+		<a href="#" onclick="toOrderListSoldPage(${requestScope.page.beforePage })">上一页</a>
 		&nbsp;&nbsp;
-		<a href="#" onclick="toOrderListPage(${requestScope.page.nextPage })">下一页</a>
+		<a href="#" onclick="toOrderListSoldPage(${requestScope.page.nextPage })">下一页</a>
 		&nbsp;&nbsp;
-		<a href="#" onclick="toOrderListPage(${requestScope.page.maxPage })">末页</a>
+		<a href="#" onclick="toOrderListSoldPage(${requestScope.page.maxPage })">末页</a>
 		&nbsp;&nbsp;转到<input type="text" size="1" id="pageNo">页
 		<br>
 	</center>

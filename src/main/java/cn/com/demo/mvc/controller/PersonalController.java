@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import cn.com.demo.javaweb.shopping.entity.User;
 import cn.com.demo.javaweb.shopping.entity.toshow.Page;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowOrderList;
+import cn.com.demo.javaweb.shopping.entity.toshow.ShowProductAdmin;
 import cn.com.demo.javaweb.shopping.service.IPersonalService;
 
 @Controller
@@ -56,6 +57,31 @@ public class PersonalController {
 			flag = true;
 		}
 		return flag;
+	}
+
+	@RequestMapping("/showMyPosted/{pageNo}")
+	public ModelAndView showMyPosted(HttpSession session, @PathVariable("pageNo") int pageNo) {
+		ModelAndView model = new ModelAndView();
+		User user = (User) session.getAttribute("user");
+		model.setViewName("proList");
+		List<ShowProductAdmin> items = personalService.getAllShowMyPostedByPage(pageNo, pageSize, user.getId());
+		Page page = new Page(pageNo, personalService.getProMaxPage(pageSize, user.getId()));
+		model.addObject("items", items);
+		model.addObject("page", page);
+		return model;
+	}
+
+	@RequestMapping("/showMySold/{pageNo}")
+	public ModelAndView showMySold(HttpSession session, @PathVariable("pageNo") int pageNo) {
+		ModelAndView model = new ModelAndView();
+		User user = (User) session.getAttribute("user");
+		int userId = user.getId();
+		model.setViewName("orderListSold");
+		List<ShowOrderList> items = personalService.getAllShowMySoldByPage(pageNo, pageSize, userId);
+		Page page = new Page(pageNo, personalService.getMySoldMaxPage(pageSize, userId));
+		model.addObject("items", items);
+		model.addObject("page", page);
+		return model;
 	}
 
 }

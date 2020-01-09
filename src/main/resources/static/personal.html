@@ -38,6 +38,34 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </script>
 
 <script>
+
+	function toshowMySold(pageNo) {
+		$.ajax({
+			type : 'post',
+			url : 'showMySold/' + pageNo,
+			success : function(msg) {
+				$("#mainShow").html(msg);
+			}
+		});
+	}
+	
+	function toOrderListSoldPage(pageNo) {
+		toshowMySold(pageNo);
+	}
+
+	function toShowMyPosted(pageNo) {
+		$.ajax({
+			type : 'post',
+			url : 'showMyPosted/' + pageNo,
+			success : function(msg) {
+				$("#mainShow").html(msg);
+			}
+		});
+	}
+	
+	function toProsPage(pageNo) {
+		toShowMyPosted(pageNo);
+	}
 	
 
 	function toOrderListPage(pageNo) {
@@ -152,10 +180,19 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<div class="col-xs-7 menu">
 		<ul class="megamenu skyblue">
 			<li class="grid">
-				<a class="color1" href="#" id="meun" onclick="toOrderListPage(1)">我的订单</a>
+				<a class="color1" href="#" id="meun" onclick="toOrderListPage(1)">我买到的</a>
 			</li>
 			<li class="grid">
-				<a class="color2" href="#" id="meun" onclick="toCharge()">充值</a>
+				<a class="color1" id="meun" href="#" onclick="toShowMyPosted(1)">我发布的</a>
+			</li>
+			<li class="grid">
+				<a class="color1" id="meun" href="#" onclick="toshowMySold(1)">我卖出的</a>
+			</li>
+			<li class="grid">
+				<a class="color1" id="meun" href="#" onclick="toShowMyPosted(1)">发布商品</a>
+			</li>
+			<li class="grid">
+				<a class="color2" href="#" id="meun" onclick="toCharge()">充值余额</a>
 			</li>
 			
 		</ul>
