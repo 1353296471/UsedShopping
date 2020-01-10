@@ -1,0 +1,87 @@
+<br>
+<br>
+
+<center>
+	<form class="form-horizontal" style="width: 600px">
+		<div class="form-group">
+			<label class="col-sm-2 control-label">商品名称</label>
+			<div class="col-sm-10">
+				<input type="text" name="proName" class="form-control" id="model_proName">
+				<span class="help-block"></span>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">价格</label>
+			<div class="col-sm-10">
+				<input type="number" name="email" class="form-control" id="model_price">
+				<span class="help-block"></span>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">商品描述</label>
+			<div class="col-sm-10">
+				<!-- 
+						<input type="text" name="proDes" class="form-control" id="model_proDes">
+					-->
+
+				<textarea class="form-control" rows="10" name="proDes" id="model_proDes"></textarea>
+				<span class="help-block"></span>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">商品类别</label>
+			<div class="col-sm-10">
+				<!-- 
+						<input type="text" name="proDes" class="form-control" id="model_proDes">
+					-->
+
+				<select class="form-control" id="type">
+					<option></option>
+					<option>女装</option>
+					<option>男装</option>
+
+				</select> <input type="text" id="catalogTypeOne" hidden="true" value="女装">
+
+				<span class="help-block"></span>
+			</div>
+		</div>
+
+
+
+		<script type="text/javascript">
+			function changepic() {
+				var reads = new FileReader();
+				var f = document.getElementById('i-file').files[0];
+				reads.readAsDataURL(f);
+				reads.onload = function(e) {
+					document.getElementById('mainImg').src = this.result;
+				};
+			}
+
+			$(function() {
+				$("#type").change(function() {
+					var type = $('#type option:selected').text();
+					document.getElementById('catalogTypeOne').value = type;
+				})
+			})
+		</script>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">选择图片</label>
+			<div class="col-sm-6">
+				<div class="input-group">
+					<input id='location' class="form-control" disabled="true"> <label class="input-group-btn"> <input type="button" id="i-check" value="浏览图片" class="btn btn-primary" onclick="$('#i-file').click();">
+					</label>
+				</div>
+
+			</div>
+
+			<p class="help-block">不超过300k的jpg或png图片</p>
+			<input type="file" name="file" id='i-file' accept=".jpg, .png" onchange="$('#location').val($('#i-file').val());changepic(this);" style="display: none">
+			<img id="mainImg" src="" class="img-rounded" width="300" height="400">
+		</div>
+
+	</form>
+</center>

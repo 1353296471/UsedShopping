@@ -67,6 +67,16 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		toShowMyPosted(pageNo);
 	}
 	
+	function toReleasePro() {
+		$.ajax({
+			type : 'post',
+			url : 'toReleasePro',
+			success : function(msg) {
+				$("#mainShow").html(msg);
+			}
+		});
+	}
+	
 
 	function toOrderListPage(pageNo) {
 		$.ajax({
@@ -189,7 +199,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<a class="color1" id="meun" href="#" onclick="toshowMySold(1)">我卖出的</a>
 			</li>
 			<li class="grid">
-				<a class="color1" id="meun" href="#" onclick="toShowMyPosted(1)">发布商品</a>
+				<a class="color1" id="meun" href="#" onclick="toReleasePro()">发布商品</a>
 			</li>
 			<li class="grid">
 				<a class="color2" href="#" id="meun" onclick="toCharge()">充值余额</a>

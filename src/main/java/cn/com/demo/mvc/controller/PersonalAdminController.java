@@ -65,6 +65,7 @@ public class PersonalAdminController {
 	@ResponseBody
 	@RequestMapping("/updateShowProductAdmin")
 	public Boolean updateShowProductAdmin(@RequestBody @Valid ShowProductAdmin showProductAdmin) {
+		showProductAdmin.setCatalogTypeOne("衣服");
 		return personalAdminService.updateShowProductAdmin(showProductAdmin);
 	}
 

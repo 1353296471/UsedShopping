@@ -9,8 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import cn.com.demo.javaweb.shopping.entity.Catalog;
 import cn.com.demo.javaweb.shopping.entity.User;
 import cn.com.demo.javaweb.shopping.entity.toshow.Page;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowOrderList;
@@ -82,6 +84,28 @@ public class PersonalController {
 		model.addObject("items", items);
 		model.addObject("page", page);
 		return model;
+	}
+
+	@RequestMapping("/toReleasePro")
+	public ModelAndView toReleasePro(HttpSession session) {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("releasePro");
+		List<Catalog> types = personalService.getAllCatalogs();
+		model.addObject("types", types);
+		return model;
+	}
+
+	@ResponseBody
+	@RequestMapping("/releasePro")
+	public Boolean releaseProduct(HttpSession session, ShowProductAdmin showProductAdmin, MultipartFile img)
+			throws Exception {
+
+		User user = (User) session.getAttribute("user");
+		int userId = user.getId();
+		System.out.println("userId = " + userId);
+		showProductAdmin.setUserId(userId);
+		System.out.println(showProductAdmin);
+		return personalService.releaseProduct(showProductAdmin, img);
 	}
 
 }

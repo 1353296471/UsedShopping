@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.com.demo.javaweb.shopping.dao.ICatalogDao;
 import cn.com.demo.javaweb.shopping.dao.IImgDao;
 import cn.com.demo.javaweb.shopping.dao.IOrderDao;
 import cn.com.demo.javaweb.shopping.dao.IProDao;
@@ -61,6 +62,9 @@ public class IPersonalAdminServiceImpl implements IPersonalAdminService {
 
 	@Autowired
 	private IProDesDao proDesDao;
+
+	@Autowired
+	private ICatalogDao catalogDao;
 
 	@Override
 	public List<ShowOrderList> getShowOrderLists(int userId) {
@@ -137,10 +141,12 @@ public class IPersonalAdminServiceImpl implements IPersonalAdminService {
 		pro.setId(showProductAdmin.getProId());
 		pro.setPrice(showProductAdmin.getPrice());
 		pro.setProName(showProductAdmin.getProName());
+		pro.setCatalogId(catalogDao.getCatalogByTypeOne(showProductAdmin.getCatalogTypeOne()).getCatalogId());
 
 		ProDes proDes = new ProDes();
 		proDes.setProDesPkid(showProductAdmin.getProId());
 		proDes.setProDes(showProductAdmin.getProDes());
+
 		if (proDesDao.getProDes(showProductAdmin.getProId()) != null) {
 			if (proDesDao.updateProDes(proDes) && proDao.updateProduct(pro)) {
 				flag = true;

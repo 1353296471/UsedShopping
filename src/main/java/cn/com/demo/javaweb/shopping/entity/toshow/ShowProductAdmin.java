@@ -10,6 +10,22 @@ public class ShowProductAdmin {
 	private String catalogTypeOne;
 	private String catalogTypeTwo;
 	private String proDes;
+	private int userId;
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	@Override
+	public String toString() {
+		return "ShowProductAdmin [imgUrl=" + imgUrl + ", proId=" + proId + ", proName=" + proName + ", price=" + price
+				+ ", catalogId=" + catalogId + ", sex=" + sex + ", catalogTypeOne=" + catalogTypeOne
+				+ ", catalogTypeTwo=" + catalogTypeTwo + ", proDes=" + proDes + ", userId=" + userId + "]";
+	}
 
 	public String getProDes() {
 		return proDes;

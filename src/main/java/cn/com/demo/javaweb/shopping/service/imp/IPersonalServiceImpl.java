@@ -1,24 +1,40 @@
 package cn.com.demo.javaweb.shopping.service.imp;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import cn.com.demo.javaweb.shopping.dao.ICatalogDao;
 import cn.com.demo.javaweb.shopping.dao.IImgDao;
 import cn.com.demo.javaweb.shopping.dao.IOrderDao;
 import cn.com.demo.javaweb.shopping.dao.IProDao;
+import cn.com.demo.javaweb.shopping.dao.IProDesDao;
 import cn.com.demo.javaweb.shopping.dao.IReceiveDao;
 import cn.com.demo.javaweb.shopping.dao.IShopCarDao;
 import cn.com.demo.javaweb.shopping.dao.IShowOrderListDao;
 import cn.com.demo.javaweb.shopping.dao.IShowProductAdminDao;
 import cn.com.demo.javaweb.shopping.dao.IUserDao;
 import cn.com.demo.javaweb.shopping.dao.IWarehouseDao;
+import cn.com.demo.javaweb.shopping.entity.Catalog;
+import cn.com.demo.javaweb.shopping.entity.Img;
+import cn.com.demo.javaweb.shopping.entity.ProDes;
+import cn.com.demo.javaweb.shopping.entity.Product;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowOrderList;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowProductAdmin;
 import cn.com.demo.javaweb.shopping.service.IPersonalService;
 
+@Transactional
 @Service
 public class IPersonalServiceImpl implements IPersonalService {
 
@@ -44,9 +60,14 @@ public class IPersonalServiceImpl implements IPersonalService {
 	private IImgDao imgDao;
 
 	@Autowired
+	private IProDesDao proDesDao;
+
+	@Autowired
 	private IShowOrderListDao showOrderListDao;
 	@Autowired
 	private IShowProductAdminDao showProductAdminDao;
+	@Autowired
+	private ICatalogDao catalogDao;
 
 	@Override
 	public List<ShowOrderList> getShowOrderLists(int userId) {
@@ -114,10 +135,6 @@ public class IPersonalServiceImpl implements IPersonalService {
 		return maxPage;
 	}
 
-	public static void main(String[] args) {
-
-	}
-
 	@Override
 	public double getCash(int userId) {
 		double cash = 0;
@@ -149,5 +166,81 @@ public class IPersonalServiceImpl implements IPersonalService {
 	public int getMySoldMaxPage(int pageSize, int userId) {
 		int maxPage = (showOrderListDao.getAllShowMySold(userId).size() + pageSize - 1) / pageSize;
 		return maxPage;
+	}
+
+	@Override
+	public Boolean releaseProduct(ShowProductAdmin showProductAdmin, MultipartFile imgFile) throws Exception {
+		boolean flag = false;
+		Product pro = new Product();
+		pro.setUserId(showProductAdmin.getUserId());
+		pro.setPrice(showProductAdmin.getPrice());
+		pro.setProName(showProductAdmin.getProName());
+		pro.setCatalogId(catalogDao.getCatalogByTypeOne(showProductAdmin.getCatalogTypeOne()).getCatalogId());
+
+		ProDes proDes = new ProDes();
+		proDes.setProDes(showProductAdmin.getProDes());
+
+		proDao.addProductBackId(pro);
+		int proId = pro.getId();
+		System.out.println("proId" + proId);
+
+		if (proId != 0) {
+			proDes.setProDesPkid(proId);
+			proDesDao.addProDes(proDes);
+
+		}
+
+		// String imgUrl = "";
+		// 为img文件设定唯一名称，保存到images目录下
+//		do {
+//			imgUrl = UUID.randomUUID().toString();
+//		} while (!imgDao.getImgUrlSame(imgUrl));
+
+		MultipartFile file = imgFile;
+		String dir = ResourceUtils.getURL("classpath:static/images/").toURI().getPath();
+		String type = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1,
+				file.getOriginalFilename().length());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+		Random r = new Random();
+		String imgName = "";
+		do {
+			if ("jpg".equals(type)) {
+				imgName = sdf.format(new Date()) + r.nextInt(100) + ".jpg";
+			} else if ("png".equals(type)) {
+				imgName = sdf.format(new Date()) + r.nextInt(100) + ".png";
+			} else if ("jpeg".equals(type)) {
+				imgName = sdf.format(new Date()) + r.nextInt(100) + ".jpeg";
+			} else if ("gif".equals(type)) {
+				imgName = sdf.format(new Date()) + r.nextInt(100) + ".gif";
+			} else {
+				return false;
+			}
+		} while (imgDao.getImgUrlSame(imgName));
+
+		// 在数据库中添加img的文件路径
+		Img img = new Img();
+		img.setImgUrl(imgName);
+		img.setProId(proId);
+		img.setType(1);
+		imgDao.addImg(img);
+
+		// 将文件流写入到磁盘中
+		System.out.println(dir + "--" + imgName);
+		FileUtils.writeByteArrayToFile(new File(dir, imgName), file.getBytes());
+		flag = true;
+		return flag;
+	}
+
+	public static void main(String[] args) {
+		for (int i = 0; i < 20; i++) {
+			System.out.println(UUID.randomUUID());
+		}
+
+	}
+
+	@Override
+	public List<Catalog> getAllCatalogs() {
+		// TODO 自动生成的方法存根
+		return catalogDao.getAllCatalogs();
 	}
 }
