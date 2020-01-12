@@ -2,6 +2,10 @@ package cn.com.demo.javaweb.shopping.service;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowOrderList;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowProductAdmin;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowWarehouse;
@@ -28,4 +32,6 @@ public interface IPersonalAdminService {
 	public boolean updateShowProductAdmin(ShowProductAdmin showProductAdmin);
 
 	public boolean toDeletePro(int proId);
+
+	public Boolean updateShowProductAdmin(@Valid ShowProductAdmin showProductAdmin, MultipartFile img) throws Exception;
 }

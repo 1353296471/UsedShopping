@@ -38,6 +38,7 @@ function isAdmin() {
 }
 
 function search() {
+	var proName = $("#Sea").val();
 	if($("#Sea").val()==""){
 		swal("搜索内容不能为空");
 	}else{
@@ -48,6 +49,7 @@ function search() {
 
 // 初始化
 function init() {
+	
 	if (isLogin()) {
 		$.ajax({
 			type : 'post',
@@ -59,6 +61,15 @@ function init() {
 			}
 		});
 	}
+	
+	$.ajax({
+		type : 'post',
+		url : 'getTypes',
+		success : function(msg) {
+			$(".skyblue").html(msg);
+		}
+	});
+	
 }
 
 // 初始化
@@ -232,6 +243,71 @@ function checkName(name) {
 		flag = true;
 	}
 	return flag;
+}
+
+function checkProDes(proDes) {
+	var flag = false;
+	if (!(proDes != "")) {
+		swal("请输入正确的商品描述！")
+	} else {
+		flag = true;
+	}
+	return flag;
+}
+
+function checkType(type) {
+	var flag = false;
+	if (!(type != "")) {
+		swal("请选择正确的商品类别！")
+	} else {
+		flag = true;
+	}
+	return flag;
+}
+
+/* 检查是否为图片 */
+function isImage(filepath) {
+    var extStart = filepath.lastIndexOf(".");
+    var ext = filepath.substring(extStart, filepath.length).toUpperCase();
+    if (ext != ".BMP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG") {
+        swal("图片只能是bmp,png,gif,jpeg,jpg格式喔");
+        return false;
+    }
+    return true;
+}
+
+/* 检查图片大小，不能超过2M,支持IE、filefox、chrome */
+function checkFileSize(imgEle) {
+	var filepath = imgEle.val();
+    var maxsize = 2 * 1024 * 1024;// 2M
+    var errMsg = "上传的图片文件不能超过2M喔！！！";
+    var tipMsg = "您的浏览器暂不支持上传头像，确保上传文件不要超过2M，建议使用IE、FireFox、Chrome浏览器。";
+
+    try {
+        var filesize = 0;
+        var ua = window.navigator.userAgent;
+        if (ua.indexOf("MSIE") >= 1) {
+            // IE
+            var img = new Image();
+            img.src = filepath;
+            filesize = img.fileSize;
+        } else {
+            // file_size = document.getElementById("imageFile").files[0].size;
+            filesize = imgEle[0].files[0].size; // byte
+        }
+
+        if (filesize > 0 && filesize > maxsize) {
+            swal(errMsg);
+            return false;
+        } else if (filesize == -1) {
+            swal(tipMsg);
+            return false;
+        }
+    } catch (e) {
+        swal("图片上传失败，请重试");
+        return false;
+    }
+    return true;
 }
 
 function choseLocation() {

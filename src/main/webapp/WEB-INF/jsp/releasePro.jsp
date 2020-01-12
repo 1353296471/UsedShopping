@@ -20,33 +20,49 @@
 	})
 
 	function release() {
-		
-		var formData = new FormData();  //创建一个forData 
-	    formData.append('img', $('#i-file')[0].files[0]); //把file添加进去  name命名为img
-	    formData.append('catalogTypeOne', $("#catalogTypeOne").val());
-	    formData.append('proName', $("#model_proName").val());
-	    formData.append('price', $("#model_price").val());
-	    formData.append('proDes', $("#model_proDes").val());
+
+		var imgEle = $("#i-file");
+		var filepath = imgEle.val();
+		//检查是否为图片
+		if (!isImage(filepath)) {
+			return false;
+		}
+		//检查文件大小，不能超过2M
+		if (!checkFileSize(imgEle)) {
+			return false;
+		}
+
+		var formData = new FormData(); //创建一个forData 
+		formData.append('img', $('#i-file')[0].files[0]); //把file添加进去  name命名为img
+		formData.append('catalogTypeOne', $("#type").val());
+		formData.append('proName', $("#model_proName").val());
+		formData.append('price', $("#model_price").val());
+		formData.append('proDes', $("#model_proDes").val());
 		//swal(pro.proName + pro.price + pro.proDes);
-	    $.ajax({
-            url: "releasePro",
-            type: "post",
-            dataType: "json",
-            cache: false,
-            data: formData,
-            processData: false,// 不处理数据
-            contentType: false, // 不设置内容类型
-            success: function (flag) {
-            	if(flag){
-            		swal("发布成功！");
-            		//clearbtn();
-            	}else{
-            		swal("发布失败！");
-            	}
-                
-                
-            }
-        })
+		
+		if (!checkMoney(formData.get('price')) || !checkName(formData.get('proName'))
+				|| !checkProDes(formData.get('proDes'))
+				|| !checkType(formData.get('catalogTypeOne'))) {
+			return;
+		}
+		$.ajax({
+			url : "releasePro",
+			type : "post",
+			dataType : "json",
+			cache : false,
+			data : formData,
+			processData : false,// 不处理数据
+			contentType : false, // 不设置内容类型
+			success : function(flag) {
+				if (flag) {
+					swal("发布成功！");
+					//clearbtn();
+				} else {
+					swal("发布失败！");
+				}
+
+			}
+		})
 	}
 
 	function clearbtn() {
@@ -106,7 +122,7 @@
 					<c:forEach items="${types }" var="type">
 						<option>${type.catalogTypeOne }</option>
 					</c:forEach>
-					
+
 
 				</select> <input type="text" id="catalogTypeOne" hidden="true" value="衣服">
 
@@ -127,7 +143,7 @@
 
 			</div>
 
-			<p class="help-block">不超过1M的jpg或png图片</p>
+			<p class="help-block">不超过2M的图片</p>
 			<input type="file" name="file" id='i-file' accept=".jpg, .png" onchange="$('#location').val($('#i-file').val());changepic(this);" style="display: none">
 			<img id="mainImg" src="" class="img-rounded" width="300" height="400">
 		</div>

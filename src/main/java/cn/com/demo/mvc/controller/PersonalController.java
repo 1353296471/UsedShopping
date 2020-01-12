@@ -108,4 +108,13 @@ public class PersonalController {
 		return personalService.releaseProduct(showProductAdmin, img);
 	}
 
+	@RequestMapping("/getTypes")
+	public ModelAndView getTypes() throws Exception {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("showType");
+		List<Catalog> types = personalService.getAllCatalogs();
+		model.addObject("types", types);
+		return model;
+	}
+
 }

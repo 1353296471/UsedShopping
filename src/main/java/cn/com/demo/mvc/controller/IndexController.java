@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import cn.com.demo.javaweb.shopping.entity.Admin;
 import cn.com.demo.javaweb.shopping.entity.User;
+import cn.com.demo.javaweb.shopping.entity.toshow.ShowProduct;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowShopCar;
 import cn.com.demo.javaweb.shopping.service.IIndexService;
 
@@ -180,6 +181,25 @@ public class IndexController {
 			session.removeAttribute("admin");
 		}
 		model.setViewName("redirect:/login.html");
+		return model;
+	}
+
+	@RequestMapping("/searchProName/{proName}")
+	public ModelAndView commentCountServlet(HttpSession session, @PathVariable("proName") String proName)
+			throws Exception {
+		List<ShowProduct> proList = indexService.searchProName(proName);
+		ModelAndView model = new ModelAndView();
+		model.setViewName("searchResult");
+		model.addObject("searchPro", proList);
+		return model;
+	}
+
+	@RequestMapping("/searchType/{catalogId}")
+	public ModelAndView searchType(@PathVariable("catalogId") Integer catalogId) {
+		List<ShowProduct> proList = indexService.searchType(catalogId);
+		ModelAndView model = new ModelAndView();
+		model.setViewName("searchResult");
+		model.addObject("searchPro", proList);
 		return model;
 	}
 

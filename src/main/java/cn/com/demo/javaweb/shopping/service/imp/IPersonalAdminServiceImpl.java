@@ -1,11 +1,20 @@
 package cn.com.demo.javaweb.shopping.service.imp;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
+import javax.validation.Valid;
+
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import cn.com.demo.javaweb.shopping.dao.ICatalogDao;
 import cn.com.demo.javaweb.shopping.dao.IImgDao;
@@ -19,6 +28,7 @@ import cn.com.demo.javaweb.shopping.dao.IShowProductAdminDao;
 import cn.com.demo.javaweb.shopping.dao.IShowWarehouseDao;
 import cn.com.demo.javaweb.shopping.dao.IUserDao;
 import cn.com.demo.javaweb.shopping.dao.IWarehouseDao;
+import cn.com.demo.javaweb.shopping.entity.Img;
 import cn.com.demo.javaweb.shopping.entity.ProDes;
 import cn.com.demo.javaweb.shopping.entity.Product;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowOrderList;
@@ -136,25 +146,31 @@ public class IPersonalAdminServiceImpl implements IPersonalAdminService {
 	@Override
 	public boolean updateShowProductAdmin(ShowProductAdmin showProductAdmin) {
 		boolean flag = false;
+
 		// flag = showProductAdminDao.updateShowProductAdmin(showProductAdmin);
-		Product pro = new Product();
-		pro.setId(showProductAdmin.getProId());
-		pro.setPrice(showProductAdmin.getPrice());
-		pro.setProName(showProductAdmin.getProName());
-		pro.setCatalogId(catalogDao.getCatalogByTypeOne(showProductAdmin.getCatalogTypeOne()).getCatalogId());
+		try {
+			Product pro = new Product();
+			pro.setId(showProductAdmin.getProId());
+			pro.setPrice(showProductAdmin.getPrice());
+			pro.setProName(showProductAdmin.getProName());
+			pro.setCatalogId(catalogDao.getCatalogByTypeOne(showProductAdmin.getCatalogTypeOne()).getCatalogId());
 
-		ProDes proDes = new ProDes();
-		proDes.setProDesPkid(showProductAdmin.getProId());
-		proDes.setProDes(showProductAdmin.getProDes());
+			ProDes proDes = new ProDes();
+			proDes.setProDesPkid(showProductAdmin.getProId());
+			proDes.setProDes(showProductAdmin.getProDes());
 
-		if (proDesDao.getProDes(showProductAdmin.getProId()) != null) {
-			if (proDesDao.updateProDes(proDes) && proDao.updateProduct(pro)) {
-				flag = true;
+			if (proDesDao.getProDes(showProductAdmin.getProId()) != null) {
+				if (proDesDao.updateProDes(proDes) && proDao.updateProduct(pro)) {
+					flag = true;
+				}
+			} else {
+				if (proDesDao.addProDes(proDes) && proDao.updateProduct(pro)) {
+					flag = true;
+				}
 			}
-		} else {
-			if (proDesDao.addProDes(proDes) && proDao.updateProduct(pro)) {
-				flag = true;
-			}
+		} catch (Exception e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
 		}
 		return flag;
 	}
@@ -163,5 +179,81 @@ public class IPersonalAdminServiceImpl implements IPersonalAdminService {
 	public boolean toDeletePro(int proId) {
 		// TODO 自动生成的方法存根
 		return proDao.toDeletePro(proId);
+	}
+
+	@Override
+	public Boolean updateShowProductAdmin(@Valid ShowProductAdmin showProductAdmin, MultipartFile imgFile)
+			throws Exception {
+		boolean flag = false;
+
+		try {
+			int proId = showProductAdmin.getProId();
+			Product pro = new Product();
+			pro.setId(showProductAdmin.getProId());
+			pro.setPrice(showProductAdmin.getPrice());
+			pro.setProName(showProductAdmin.getProName());
+			pro.setCatalogId(catalogDao.getCatalogByTypeOne(showProductAdmin.getCatalogTypeOne()).getCatalogId());
+
+			ProDes proDes = new ProDes();
+			proDes.setProDesPkid(showProductAdmin.getProId());
+			proDes.setProDes(showProductAdmin.getProDes());
+
+			if (proDesDao.getProDes(showProductAdmin.getProId()) != null) {
+				if (proDesDao.updateProDes(proDes) && proDao.updateProduct(pro)) {
+					flag = true;
+				}
+			} else {
+				if (proDesDao.addProDes(proDes) && proDao.updateProduct(pro)) {
+					flag = true;
+				}
+			}
+
+			// String imgUrl = "";
+			// 为img文件设定唯一名称，保存到images目录下
+//		do {
+//			imgUrl = UUID.randomUUID().toString();
+//		} while (!imgDao.getImgUrlSame(imgUrl));
+
+			if (imgFile != null) {
+
+				MultipartFile file = imgFile;
+				String dir = ResourceUtils.getURL("classpath:static/images/").toURI().getPath();
+				String type = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1,
+						file.getOriginalFilename().length());
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+				Random r = new Random();
+				String imgName = "";
+				do {
+					if ("jpg".equals(type)) {
+						imgName = sdf.format(new Date()) + r.nextInt(100) + ".jpg";
+					} else if ("png".equals(type)) {
+						imgName = sdf.format(new Date()) + r.nextInt(100) + ".png";
+					} else if ("jpeg".equals(type)) {
+						imgName = sdf.format(new Date()) + r.nextInt(100) + ".jpeg";
+					} else if ("gif".equals(type)) {
+						imgName = sdf.format(new Date()) + r.nextInt(100) + ".gif";
+					} else {
+						return false;
+					}
+				} while (imgDao.getImgUrlSame(imgName));
+
+				// 在数据库中添加img的文件路径并移除之前的绑定的商品图片
+				Img img = new Img();
+				img.setImgUrl(imgName);
+				img.setProId(proId);
+				img.setType(1);
+				imgDao.removeMainImg(proId);
+				imgDao.addImg(img);
+
+				// 将文件流写入到磁盘中
+				System.out.println(dir + "--" + imgName);
+				FileUtils.writeByteArrayToFile(new File(dir, imgName), file.getBytes());
+				flag = true;
+			}
+		} catch (Exception e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
+		}
+		return flag;
 	}
 }

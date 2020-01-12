@@ -15,4 +15,8 @@ public interface IIndexService {
 	public boolean removeShopCarItem(int userId, int proId, int num);
 
 	public boolean deleteShopCarItem(int userId, int proId);
+
+	public List<ShowProduct> searchProName(String proName);
+
+	public List<ShowProduct> searchType(Integer catalogId);
 }

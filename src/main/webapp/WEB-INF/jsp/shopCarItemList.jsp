@@ -21,7 +21,7 @@
 					</div>
 					<div class="list_desc">
 						<h4>
-							<a href="#">${item.showProduct.pro.proName }</a>
+							<a href="tosingle/${item.showProduct.pro.id }">${item.showProduct.pro.proName }</a>
 						</h4>
 						${item.num } x
 						<span class="actual"> ￥${item.showProduct.pro.price }</span>

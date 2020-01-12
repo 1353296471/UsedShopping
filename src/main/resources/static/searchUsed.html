@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>BUYSHOP-首页</title>
+<title>搜索结果</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="Flatro Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template, 
@@ -68,14 +68,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script>
 	$(document).ready(function() {
 		init();
-		$.ajax({
-			type : 'post',
-			url : 'showProduct',
-			success : function(msg) {
-				$("#showProduct").html(msg);
-			}
-		});
 	})
+	
+	
 </script>
 </head>
 <body>
@@ -139,20 +134,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="clearfix"></div>
 		</div>
 	</div>
-	<div class="banner">
-		<div class="container">
-			<div class="banner_desc">
-				<h1>BUYSHOP-二手交易购物平台</h1>
-				<h2>看看好货吧！</h2>
-				<div class="button">
-					<a href="search.html?searchdata=" class="hvr-shutter-out-horizontal">现在购买</a>
-				</div>
-			</div>
-		</div>
-	</div>
+	
 	<div class="content_top">
-		<h3 class="m_1">热门商品</h3>
-		<div class="container" id="showProduct"></div>
+		<h3 class="m_1">搜索结果</h3>
+		
+		<!-- 搜索结果 -->
+		
+		
 	</div>
 	</div>
 

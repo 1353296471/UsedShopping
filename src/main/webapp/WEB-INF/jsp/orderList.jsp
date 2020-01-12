@@ -40,7 +40,7 @@ function toSendOrder(orderPkid){
 			<div class="cart_box">
 				<div class="message">
 					<div class="list_img" style="border: none;">
-						<img src="images/${item.imgUrl }" class="img-responsive" alt="" width="100px" height="140px" />
+						<img src="images/${item.imgUrl }" class="img-responsive" alt="" width="100" height="140" />
 					</div>
 					<div class="list_desc">
 						<h3>

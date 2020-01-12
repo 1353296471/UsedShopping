@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,71 +170,72 @@ public class IPersonalServiceImpl implements IPersonalService {
 	@Override
 	public Boolean releaseProduct(ShowProductAdmin showProductAdmin, MultipartFile imgFile) throws Exception {
 		boolean flag = false;
-		Product pro = new Product();
-		pro.setUserId(showProductAdmin.getUserId());
-		pro.setPrice(showProductAdmin.getPrice());
-		pro.setProName(showProductAdmin.getProName());
-		pro.setCatalogId(catalogDao.getCatalogByTypeOne(showProductAdmin.getCatalogTypeOne()).getCatalogId());
+		try {
+			Product pro = new Product();
+			pro.setUserId(showProductAdmin.getUserId());
+			pro.setPrice(showProductAdmin.getPrice());
+			pro.setProName(showProductAdmin.getProName());
+			pro.setCatalogId(catalogDao.getCatalogByTypeOne(showProductAdmin.getCatalogTypeOne()).getCatalogId());
 
-		ProDes proDes = new ProDes();
-		proDes.setProDes(showProductAdmin.getProDes());
+			ProDes proDes = new ProDes();
+			proDes.setProDes(showProductAdmin.getProDes());
 
-		proDao.addProductBackId(pro);
-		int proId = pro.getId();
-		System.out.println("proId" + proId);
+			proDao.addProductBackId(pro);
+			int proId = pro.getId();
+			System.out.println("proId" + proId);
 
-		if (proId != 0) {
-			proDes.setProDesPkid(proId);
-			proDesDao.addProDes(proDes);
+			if (proId != 0) {
+				proDes.setProDesPkid(proId);
+				proDesDao.addProDes(proDes);
 
-		}
+			}
 
-		// String imgUrl = "";
-		// 为img文件设定唯一名称，保存到images目录下
+			// String imgUrl = "";
+			// 为img文件设定唯一名称，保存到images目录下
 //		do {
 //			imgUrl = UUID.randomUUID().toString();
 //		} while (!imgDao.getImgUrlSame(imgUrl));
+			if (imgFile != null) {
 
-		MultipartFile file = imgFile;
-		String dir = ResourceUtils.getURL("classpath:static/images/").toURI().getPath();
-		String type = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1,
-				file.getOriginalFilename().length());
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-		Random r = new Random();
-		String imgName = "";
-		do {
-			if ("jpg".equals(type)) {
-				imgName = sdf.format(new Date()) + r.nextInt(100) + ".jpg";
-			} else if ("png".equals(type)) {
-				imgName = sdf.format(new Date()) + r.nextInt(100) + ".png";
-			} else if ("jpeg".equals(type)) {
-				imgName = sdf.format(new Date()) + r.nextInt(100) + ".jpeg";
-			} else if ("gif".equals(type)) {
-				imgName = sdf.format(new Date()) + r.nextInt(100) + ".gif";
-			} else {
-				return false;
+				MultipartFile file = imgFile;
+				String dir = ResourceUtils.getURL("classpath:static/images/").toURI().getPath();
+				String type = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1,
+						file.getOriginalFilename().length());
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
+				Random r = new Random();
+				String imgName = "";
+				do {
+					if ("jpg".equals(type)) {
+						imgName = sdf.format(new Date()) + r.nextInt(100) + ".jpg";
+					} else if ("png".equals(type)) {
+						imgName = sdf.format(new Date()) + r.nextInt(100) + ".png";
+					} else if ("jpeg".equals(type)) {
+						imgName = sdf.format(new Date()) + r.nextInt(100) + ".jpeg";
+					} else if ("gif".equals(type)) {
+						imgName = sdf.format(new Date()) + r.nextInt(100) + ".gif";
+					} else {
+						return false;
+					}
+				} while (imgDao.getImgUrlSame(imgName));
+
+				// 在数据库中添加img的文件路径
+				Img img = new Img();
+				img.setImgUrl(imgName);
+				img.setProId(proId);
+				img.setType(1);
+				imgDao.addImg(img);
+
+				// 将文件流写入到磁盘中
+				System.out.println(dir + "--" + imgName);
+				FileUtils.writeByteArrayToFile(new File(dir, imgName), file.getBytes());
 			}
-		} while (imgDao.getImgUrlSame(imgName));
 
-		// 在数据库中添加img的文件路径
-		Img img = new Img();
-		img.setImgUrl(imgName);
-		img.setProId(proId);
-		img.setType(1);
-		imgDao.addImg(img);
-
-		// 将文件流写入到磁盘中
-		System.out.println(dir + "--" + imgName);
-		FileUtils.writeByteArrayToFile(new File(dir, imgName), file.getBytes());
-		flag = true;
-		return flag;
-	}
-
-	public static void main(String[] args) {
-		for (int i = 0; i < 20; i++) {
-			System.out.println(UUID.randomUUID());
+			flag = true;
+		} catch (Exception e) {
+			// TODO 自动生成的 catch 块
+			e.printStackTrace();
 		}
-
+		return flag;
 	}
 
 	@Override

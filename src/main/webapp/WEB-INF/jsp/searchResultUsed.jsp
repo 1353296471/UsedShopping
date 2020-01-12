@@ -1,7 +1,9 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>BUYSHOP-首页</title>
+<title>搜索结果</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="keywords" content="Flatro Responsive web template, Bootstrap Web Templates, Flat Web Templates, Andriod Compatible web template, 
@@ -68,14 +70,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script>
 	$(document).ready(function() {
 		init();
-		$.ajax({
-			type : 'post',
-			url : 'showProduct',
-			success : function(msg) {
-				$("#showProduct").html(msg);
-			}
-		});
 	})
+	
+	
 </script>
 </head>
 <body>
@@ -139,20 +136,35 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<div class="clearfix"></div>
 		</div>
 	</div>
-	<div class="banner">
-		<div class="container">
-			<div class="banner_desc">
-				<h1>BUYSHOP-二手交易购物平台</h1>
-				<h2>看看好货吧！</h2>
-				<div class="button">
-					<a href="search.html?searchdata=" class="hvr-shutter-out-horizontal">现在购买</a>
-				</div>
-			</div>
-		</div>
-	</div>
+	
 	<div class="content_top">
-		<h3 class="m_1">热门商品</h3>
-		<div class="container" id="showProduct"></div>
+		<h3 class="m_1">搜索结果</h3>
+		
+		<!-- 搜索结果 -->
+	<c:forEach items="${requestScope.searchPro }" var="_search" >
+			<div class="col-md-3" style="height: 450px;">
+				<div class="shop-holder">
+					<div class="product-img">
+						<a href="tosingle/${_search.pro.id }">
+							<img width="225px" height="265px" src="images/${_search.mainImg.imgUrl }" class="img-responsive" alt="item4">
+						</a>
+						<a href="" class="hidden" ></a>
+					</div>
+				</div>
+				<div class="shop-content" style="height: 120px;">
+					<h3 >
+						<a href="tosingle/${_search.pro.id }" >${_search.pro.proName }</a>
+					</h3>
+					<span>
+						<span class="amount">¥${_search.pro.price }</span>
+					</span>
+					
+				</div>
+				
+			</div>
+	</c:forEach>
+		
+		
 	</div>
 	</div>
 
@@ -160,3 +172,4 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 </body>
 </html>
+

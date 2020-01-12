@@ -9,7 +9,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script type="application/x-javascript">
 	
 	
+	
 	 addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
+
 
 
 </script>
@@ -38,7 +40,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </script>
 
 <script>
-
 	function toshowMySold(pageNo) {
 		$.ajax({
 			type : 'post',
@@ -48,7 +49,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			}
 		});
 	}
-	
+
 	function toOrderListSoldPage(pageNo) {
 		toshowMySold(pageNo);
 	}
@@ -62,11 +63,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			}
 		});
 	}
-	
+
 	function toProsPage(pageNo) {
 		toShowMyPosted(pageNo);
 	}
-	
+
 	function toReleasePro() {
 		$.ajax({
 			type : 'post',
@@ -76,7 +77,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			}
 		});
 	}
-	
 
 	function toOrderListPage(pageNo) {
 		$.ajax({
@@ -121,13 +121,18 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		init();
 		toOrderListPage(1);
 	})
+
+	function successUpdate(){
+		swal("修改成功！");
+		$("#proUpdateModal").modal("hide");
+	}
 </script>
 
 </head>
 <body>
 	<div class="header_top">
 		<div class="container">
-			 
+
 			<div class="cssmenu">
 				<ul>
 					<li class="active">
@@ -156,7 +161,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						<li class="grid">
 							<a class="color2" id="meun" href="search.html?searchdata=女">女装</a>
 						</li>
-						 
+
 					</ul>
 				</div>
 			</div>
@@ -204,7 +209,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			<li class="grid">
 				<a class="color2" href="#" id="meun" onclick="toCharge()">充值余额</a>
 			</li>
-			
+
 		</ul>
 	</div>
 
@@ -229,6 +234,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<br>
 	<br>
 
-	 
+
 </body>
 </html>

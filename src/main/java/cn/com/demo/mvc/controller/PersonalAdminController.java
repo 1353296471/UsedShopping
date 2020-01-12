@@ -2,26 +2,30 @@ package cn.com.demo.mvc.controller;
 
 import java.util.List;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import cn.com.demo.javaweb.shopping.entity.User;
 import cn.com.demo.javaweb.shopping.entity.toshow.Page;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowOrderList;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowProductAdmin;
 import cn.com.demo.javaweb.shopping.service.IPersonalAdminService;
+import cn.com.demo.javaweb.shopping.service.IPersonalService;
 
 @Controller
 public class PersonalAdminController {
 
 	@Autowired
 	private IPersonalAdminService personalAdminService;
+	@Autowired
+	private IPersonalService personalService;
 
 	private int pageSize = 3;
 
@@ -44,6 +48,7 @@ public class PersonalAdminController {
 		Page page = new Page(pageNo, personalAdminService.getProMaxPage(pageSize));
 		model.addObject("items", items);
 		model.addObject("page", page);
+
 		return model;
 	}
 
@@ -64,9 +69,14 @@ public class PersonalAdminController {
 
 	@ResponseBody
 	@RequestMapping("/updateShowProductAdmin")
-	public Boolean updateShowProductAdmin(@RequestBody @Valid ShowProductAdmin showProductAdmin) {
-		showProductAdmin.setCatalogTypeOne("衣服");
-		return personalAdminService.updateShowProductAdmin(showProductAdmin);
+	public Boolean updateShowProductAdmin(HttpSession session, ShowProductAdmin showProductAdmin, MultipartFile img)
+			throws Exception {
+		User user = (User) session.getAttribute("user");
+		int userId = user.getId();
+		showProductAdmin.setUserId(userId);
+		System.out.println(showProductAdmin);
+		System.out.println(img);
+		return personalAdminService.updateShowProductAdmin(showProductAdmin, img);
 	}
 
 	@ResponseBody

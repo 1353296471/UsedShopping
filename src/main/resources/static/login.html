@@ -120,7 +120,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					} else {
 						falg = true;
 						swal("登录成功！", "欢迎来到BUYSHOP!", "success");
-						window.location.href = 'index.html';
+						setTimeout(function(){
+							window.location.href = 'index.html';
+						},700);
+						
 					}
 				}
 			});

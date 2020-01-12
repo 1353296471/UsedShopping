@@ -32,4 +32,10 @@ public interface IProDao {
 			"insert into product (catalogId,proName,price,userId) values (#{catalogId},#{proName},#{price},#{userId}) " })
 	public boolean addProductBackId(Product pro);
 
+	@Select({ "SELECT * from product where proName like CONCAT('%',#{proName},'%') " })
+	public List<Product> getProsByName(String proName);
+
+	@Select({ "SELECT * from product where catalogId = #{catalogId} " })
+	public List<Product> getProsByCatalogId(Integer catalogId);
+
 }

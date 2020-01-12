@@ -1,5 +1,6 @@
 package cn.com.demo.javaweb.shopping.dao;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 
@@ -14,4 +15,7 @@ public interface IImgDao {
 
 	@Insert({ "insert into img (imgUrl,type,proId) values (#{imgUrl},#{type},#{proId})" })
 	public Boolean addImg(Img img);
+
+	@Delete({ "delete from img where proId = #{proId} and type = 1" })
+	public Boolean removeMainImg(int proId);
 }

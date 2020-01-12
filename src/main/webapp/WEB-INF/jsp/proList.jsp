@@ -13,6 +13,31 @@ $(function () {
 	})
 })
 
+$(document).ready(function() {
+		$.ajax({
+			type : 'post',
+			url : 'getTypes',
+			success : function(data) {
+				for (var i = 0; i < data.length; i++) {  
+                    var option = document.createElement("option");  
+                    $(option).val(data[i].catalogTypeOne);  
+                    $(option).text(data[i].catalogTypeOne);  
+                    $('#type').append(option);
+                } 
+			}
+		});
+
+	})
+	
+	function changepic() {
+		var reads = new FileReader();
+		var f = document.getElementById('i-file').files[0];
+		reads.readAsDataURL(f);
+		reads.onload = function(e) {
+			document.getElementById('mainImg').src = this.result;
+		};
+	}
+
 function toDeletePro(id) {
 	var proId = id;
 	swal("确定要删除此商品吗？", {
@@ -56,6 +81,8 @@ function toUpdatePro(id) {
 				$("#model_proName").val(pro.proName);
 				$("#model_price").val(pro.price);
 				$("#model_proDes").val(pro.proDes);
+				$("#type").val(pro.catalogTypeOne);
+				$("#mainImg").attr("src","images/"+pro.imgUrl);
 			}
 		}
 	});
@@ -69,73 +96,66 @@ function toUpdatePro(id) {
 	
 }
 
-//点击更新，更新员工信息
-$("#emp_update_btn").click(function(){
-	
-	
-	
-	var pro = {
-			 proId : $("#emp_update_btn").attr("edit-id"),
-			 proName : $("#model_proName").val(),
-			 price : $("#model_price").val(),
-			 proDes : $("#model_proDes").val()
-		};
-	
-	
-	if(!checkMoney(pro.price) || !checkName(pro.proName)){
+//点击更新，更新商品信息
+function updatePro() {
+	var formData = new FormData(); //创建一个forData 
+	if ($("#location").val() != "") {
+		var imgEle = $("#i-file");
+		var filepath = imgEle.val();
+		//检查是否为图片
+		if (!isImage(filepath)) {
+			return false;
+		}
+		//检查文件大小，不能超过2M
+		if (!checkFileSize(imgEle)) {
+			return false;
+		}
+
+		formData.append('img', $('#i-file')[0].files[0]); //把file添加进去  name命名为img
+	}
+
+	formData.append('proId', $("#emp_update_btn").attr("edit-id"));
+	formData.append('catalogTypeOne', $("#type").val());
+	formData.append('proName', $("#model_proName").val());
+	formData.append('price', $("#model_price").val());
+	formData.append('proDes', $("#model_proDes").val());
+	//swal(pro.proName + pro.price + pro.proDes);
+
+	if (!checkMoney(formData.get('price'))
+			|| !checkName(formData.get('proName'))
+			|| !checkProDes(formData.get('proDes'))
+			|| !checkType(formData.get('catalogTypeOne'))) {
 		return;
 	}
-	
-		$.ajax({
-			async : false,
-			type : 'post',
-			url : 'updateShowProductAdmin',
-			contentType : "application/json;charset=utf-8",
-			data : JSON.stringify(pro),
-			success : function(msg) {
-				$("#proUpdateModal").modal("hide");
-				
-				if (!msg) {
-					swal("修改失败！", {
-						  buttons: { 
-							    defeat: "确认",
-							  },
-							}).then((value) => {
-						  switch (value) {
-						    case "defeat":
-						    	//2、回到本页面
-								var pageNo = ${requestScope.page.pageNo };
-								toProsPage(pageNo);
-						      break;
-						 
-						    default:
-						      break;
-						  }
-						});
-				} else {
-					swal("修改成功！", {
-						  buttons: { 
-							    defeat: "确认",
-							  },
-							}).then((value) => {
-						  switch (value) {
-						    case "defeat":
-						    	//2、回到本页面
-								var pageNo = ${requestScope.page.pageNo };
-								toProsPage(pageNo);
-						      break;
-						 
-						    default:
-						      break;
-						  }
-						});
-				}
-			}
-		});
-		
-});
+	$.ajax({
+		async : false,
+		url : "updateShowProductAdmin",
+		type : "post",
+		dataType : "json",
+		cache : false,
+		data : formData,
+		processData : false,// 不处理数据
+		contentType : false, // 不设置内容类型
+		success : function(flag) {
 
-	
+			if (flag) {
+				swal("修改成功！");
+				$("#proUpdateModal").modal("hide");
+				setTimeout(function(){
+					var pageNo = ${requestScope.page.pageNo};
+					toProsPage(pageNo);
+				},500);
+			} else {
+				swal("修改失败！");
+			}
+
+		}
+	})
+}
+
+$("#emp_update_btn").click(function(){
+	updatePro();
+});
 </script>
 
 <!-- 商品修改的模态框 -->
@@ -157,7 +177,7 @@ $("#emp_update_btn").click(function(){
 							<span class="help-block"></span>
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label class="col-sm-2 control-label">价格</label>
 						<div class="col-sm-10">
@@ -165,17 +185,44 @@ $("#emp_update_btn").click(function(){
 							<span class="help-block"></span>
 						</div>
 					</div>
-					
+
 					<div class="form-group">
 						<label class="col-sm-2 control-label">商品描述</label>
 						<div class="col-sm-10">
-						<!-- 
+							<!-- 
 						<input type="text" name="proDes" class="form-control" id="model_proDes">
 						 -->
-							
+
 							<textarea class="form-control" rows="10" name="proDes" id="model_proDes"></textarea>
 							<span class="help-block"></span>
 						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">商品类别</label>
+						<div class="col-sm-10">
+							<!-- 
+						<input type="text" name="proDes" class="form-control" id="model_proDes">
+					-->
+							<select class="form-control" id="type">
+							</select> <input type="text" id="catalogTypeOne" hidden="true" value="衣服">
+							<span class="help-block"></span>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="col-sm-2 control-label">选择图片</label>
+						<div class="col-sm-10">
+							<div class="input-group">
+								<input id='location' class="form-control" disabled="true"> <label class="input-group-btn"> <input type="button" id="i-check" value="浏览图片" class="btn btn-primary" onclick="$('#i-file').click();">
+								</label>
+							</div>
+						</div>
+						<center>
+							<p class="help-block">不超过2M的图片</p>
+							<input type="file" name="file" id='i-file' accept=".jpg, .png" onchange="$('#location').val($('#i-file').val());changepic(this);" style="display: none">
+							<img id="mainImg" src="" class="img-rounded" width="150" height="200">
+						</center>
 					</div>
 				</form>
 			</div>
@@ -195,7 +242,7 @@ $("#emp_update_btn").click(function(){
 			<div class="cart_box">
 				<div class="message">
 					<div class="list_img" style="border: none;">
-						<img src="images/${item.imgUrl }" class="img-responsive" alt="" width="100px" height="140px" />
+						<img src="images/${item.imgUrl }" class="img-responsive" alt="" width="100" height="140" />
 					</div>
 					<div class="list_desc">
 						<h3>

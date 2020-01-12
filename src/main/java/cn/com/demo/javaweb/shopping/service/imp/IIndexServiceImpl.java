@@ -40,16 +40,8 @@ public class IIndexServiceImpl implements IIndexService {
 	@Override
 	public List<ShowProduct> getShowProduct() {
 		// TODO 自动生成的方法存根
-		List<ShowProduct> showProducts = new ArrayList<ShowProduct>();
 		List<Product> proList = proDao.getIndexProduct();
-		for (Product pro : proList) {
-			ShowProduct showProduct = new ShowProduct();
-			showProduct.setPro(pro);
-			showProduct.setMainImg(imgDao.getMainImg(pro.getId()));
-			showProduct.setCatalog(catalogDao.getCatalog(pro.getCatalogId()));
-			showProducts.add(showProduct);
-		}
-		return showProducts;
+		return getShowProductByPro(proList);
 	}
 
 	@Override
@@ -116,6 +108,31 @@ public class IIndexServiceImpl implements IIndexService {
 		shopCar.setUserId(userId);
 		shopCar.setWarehouseId(warehouseId);
 		return shopCarDao.deleteShopCar(shopCar);
+	}
+
+	@Override
+	public List<ShowProduct> searchProName(String proName) {
+		List<Product> proList = proDao.getProsByName(proName);
+		return getShowProductByPro(proList);
+	}
+
+	@Override
+	public List<ShowProduct> searchType(Integer catalogId) {
+		// TODO 自动生成的方法存根
+		List<Product> proList = proDao.getProsByCatalogId(catalogId);
+		return getShowProductByPro(proList);
+	}
+
+	public List<ShowProduct> getShowProductByPro(List<Product> proList) {
+		List<ShowProduct> showProducts = new ArrayList<ShowProduct>();
+		for (Product pro : proList) {
+			ShowProduct showProduct = new ShowProduct();
+			showProduct.setPro(pro);
+			showProduct.setMainImg(imgDao.getMainImg(pro.getId()));
+			showProduct.setCatalog(catalogDao.getCatalog(pro.getCatalogId()));
+			showProducts.add(showProduct);
+		}
+		return showProducts;
 	}
 
 }
