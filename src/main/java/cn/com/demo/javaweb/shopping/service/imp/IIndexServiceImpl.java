@@ -131,6 +131,7 @@ public class IIndexServiceImpl implements IIndexService {
 
 	@Override
 	public List<ShowProduct> searchType(Integer catalogId, Integer pageNo, Integer pageSize) {
+		// 根据商品类别搜索
 		int index = (pageNo - 1) * pageSize;
 		List<ShowProduct> itemsPage;
 		if (catalogId == -1) {
