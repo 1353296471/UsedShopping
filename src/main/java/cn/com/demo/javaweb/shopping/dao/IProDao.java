@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import cn.com.demo.javaweb.shopping.entity.Product;
+import cn.com.demo.javaweb.shopping.entity.toshow.ShowProduct;
 
 public interface IProDao {
 	@Select({ "SELECT * from product where id = 1 or id = 2 or id = 3 " })
@@ -32,10 +33,22 @@ public interface IProDao {
 			"insert into product (catalogId,proName,price,userId) values (#{catalogId},#{proName},#{price},#{userId}) " })
 	public boolean addProductBackId(Product pro);
 
-	@Select({ "SELECT * from product where proName like CONCAT('%',#{proName},'%') " })
+	@Select({ "SELECT * from product where proName like CONCAT('%',#{param1},'%') " })
 	public List<Product> getProsByName(String proName);
 
-	@Select({ "SELECT * from product where catalogId = #{catalogId} " })
+	@Select({ "SELECT * from product where catalogId = #{param1} " })
 	public List<Product> getProsByCatalogId(Integer catalogId);
+
+	@Select({ "SELECT * from product where proName like CONCAT('%',#{param1},'%') " + "limit #{param2},#{param3} " })
+	public List<Product> getProsByNamePage(String proName, int index, int pageSize);
+
+	@Select({ "SELECT * from product where catalogId = #{param1} " + "limit #{param2},#{param3} " })
+	public List<Product> getProsByCatalogIdPage(Integer catalogId, int index, int pageSize);
+
+	@Select({ "SELECT * from product " + "limit #{param1},#{param2} " })
+	public List<Product> getAllProsByPage(int index, int pageSize);
+
+	@Select({ "SELECT * from product " })
+	public List<ShowProduct> getAllPros();
 
 }

@@ -15,7 +15,7 @@
 		<c:forEach items="${itemList }" var="item">
 			<div class="cart_box">
 				<div class="message">
-					<div class="alert-close" onclick="deletePro(${item.showProduct.pro.id })"></div>
+					<div class="alert-close" onclick="deletePro(${item.warehouseId })"></div>
 					<div class="list_img">
 						<img src="images/${item.showProduct.mainImg.imgUrl }" class="img-responsive" alt="" />
 					</div>

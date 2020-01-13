@@ -1,6 +1,7 @@
 package cn.com.demo.mvc.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -10,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.com.demo.javaweb.shopping.entity.Admin;
 import cn.com.demo.javaweb.shopping.entity.User;
+import cn.com.demo.javaweb.shopping.entity.toshow.Page;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowProduct;
 import cn.com.demo.javaweb.shopping.entity.toshow.ShowShopCar;
 import cn.com.demo.javaweb.shopping.service.IIndexService;
@@ -23,6 +26,8 @@ import cn.com.demo.javaweb.shopping.service.IIndexService;
 public class IndexController {
 	@Autowired
 	private IIndexService indexService;
+
+	private int pageSize = 4;
 
 	@RequestMapping("/showProduct")
 	public ModelAndView showProduct() {
@@ -184,23 +189,66 @@ public class IndexController {
 		return model;
 	}
 
-	@RequestMapping("/searchProName/{proName}")
-	public ModelAndView commentCountServlet(HttpSession session, @PathVariable("proName") String proName)
+	@RequestMapping("/searchProName")
+	public ModelAndView commentCountServlet(HttpSession session, @RequestParam("proName") String proName)
 			throws Exception {
-		List<ShowProduct> proList = indexService.searchProName(proName);
+		List<ShowProduct> proList = indexService.searchProName(proName, 1, pageSize);
 		ModelAndView model = new ModelAndView();
-		model.setViewName("searchResult");
+		model.setViewName("searchResultUsed");
 		model.addObject("searchPro", proList);
+
+		Page page = new Page();
+		page = new Page(1, indexService.getProMaxPageProName(proName, pageSize));
+		model.addObject("page", page);
+
+		session.setAttribute("searchProName", proName);
+		session.removeAttribute("searchCatalogId");
 		return model;
 	}
 
 	@RequestMapping("/searchType/{catalogId}")
-	public ModelAndView searchType(@PathVariable("catalogId") Integer catalogId) {
-		List<ShowProduct> proList = indexService.searchType(catalogId);
+	public ModelAndView searchType(HttpSession session, @PathVariable("catalogId") Integer catalogId) {
+		List<ShowProduct> proList = indexService.searchType(catalogId, 1, pageSize);
 		ModelAndView model = new ModelAndView();
-		model.setViewName("searchResult");
+		model.setViewName("searchResultUsed");
+		model.addObject("searchPro", proList);
+		Page page = new Page();
+		page = new Page(1, indexService.getProMaxPageType(catalogId, pageSize));
+		model.addObject("page", page);
+
+		session.setAttribute("searchCatalogId", catalogId);
+		session.removeAttribute("searchProName");
+		return model;
+	}
+
+	@RequestMapping("/toSearchPage/{pageNo}")
+	public ModelAndView toSearchPage(HttpSession session, @PathVariable("pageNo") Integer pageNo) {
+		Integer catalogId = (Integer) session.getAttribute("searchCatalogId");
+		String proName = (String) session.getAttribute("searchProName");
+
+		List<ShowProduct> proList = new ArrayList<ShowProduct>();
+		Page page = new Page();
+
+		if (proName != null) {
+			proList = indexService.searchProName(proName, pageNo, pageSize);
+			page = new Page(pageNo, indexService.getProMaxPageProName(proName, pageSize));
+		} else {
+			proList = indexService.searchType(catalogId, pageNo, pageSize);
+			page = new Page(pageNo, indexService.getProMaxPageType(catalogId, pageSize));
+		}
+
+		ModelAndView model = new ModelAndView();
+		model.setViewName("searchResultPageUsed");
+
+		model.addObject("page", page);
 		model.addObject("searchPro", proList);
 		return model;
 	}
 
+	@RequestMapping("/initSearch")
+	public ModelAndView initSearch() {
+		ModelAndView model = new ModelAndView();
+		model.setViewName("searchUsed");
+		return model;
+	}
 }

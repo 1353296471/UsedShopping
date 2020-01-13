@@ -122,9 +122,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 </script>
 <script type="text/javascript">
 	function toAddShopCarSingle() {
-		var sum = $("#countDiv").val();
-		var colorType = $('#colorDiv option:selected').text();
-		var sizeType = $('#sizeDiv option:selected').text();
+		/*
+		*/
 		//swal(colorType);
 		//swal(sizeType);
 		var warehouseId = 0;
@@ -132,10 +131,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			async : false,
 			type : 'post',
 			url : 'getWareIdServlet',
-			data : {
-				colorType : colorType,
-				sizeType : sizeType
-			},
 			success : function(wareId) {
 				warehouseId = wareId;
 			}
@@ -150,17 +145,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	function tobuySingle() {
 		if (isLogin()) {
 			var warehouseId = 0;
-			var sum = $("#countDiv").val();
-			var colorType = $('#colorDiv option:selected').text();
-			var sizeType = $('#sizeDiv option:selected').text();
 			$.ajax({
 				async : false,
 				type : 'post',
 				url : 'getWareIdServlet',
-				data : {
-					colorType : colorType,
-					sizeType : sizeType
-				},
 				success : function(wareId) {
 					warehouseId = wareId;
 				}

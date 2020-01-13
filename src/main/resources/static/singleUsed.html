@@ -151,11 +151,25 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					warehouseId = wareId;
 				}
 			});
+			
+			$.ajax({
+				type : 'post',
+				url : 'sureMoney/' + warehouseId + '/' + 1,
+				success : function(flag) {
+					if(!flag){
+						swal("账户余额不足，请先充值！");
+						return;
+					}
+				}
+			});
+			return;
 
 			if (warehouseId == 0) {
 				swal("请先选择好商品的属性！");
 				return;
 			}
+			
+			
 
 			$.ajax({
 				type : 'post',

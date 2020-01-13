@@ -72,10 +72,10 @@ public class IIndexServiceImpl implements IIndexService {
 			showProduct.setMainImg(imgDao.getMainImg(proId));
 			item.setShowProduct(showProduct);
 			item.setNum(shopCar.getNum());
-			String colorType = colorDao.getColor(warehouse.getColorId()).getColorType();
-			String sizeType = sizeDao.getSize(warehouse.getSizeId()).getSizeType();
-			item.setColorType(colorType);
-			item.setSizeType(sizeType);
+//			String colorType = colorDao.getColor(warehouse.getColorId()).getColorType();
+//			String sizeType = sizeDao.getSize(warehouse.getSizeId()).getSizeType();
+//			item.setColorType(colorType);
+//			item.setSizeType(sizeType);
 			item.setWarehouseId(shopCar.getWarehouseId());
 			items.add(item);
 		}
@@ -110,19 +110,6 @@ public class IIndexServiceImpl implements IIndexService {
 		return shopCarDao.deleteShopCar(shopCar);
 	}
 
-	@Override
-	public List<ShowProduct> searchProName(String proName) {
-		List<Product> proList = proDao.getProsByName(proName);
-		return getShowProductByPro(proList);
-	}
-
-	@Override
-	public List<ShowProduct> searchType(Integer catalogId) {
-		// TODO 自动生成的方法存根
-		List<Product> proList = proDao.getProsByCatalogId(catalogId);
-		return getShowProductByPro(proList);
-	}
-
 	public List<ShowProduct> getShowProductByPro(List<Product> proList) {
 		List<ShowProduct> showProducts = new ArrayList<ShowProduct>();
 		for (Product pro : proList) {
@@ -133,6 +120,43 @@ public class IIndexServiceImpl implements IIndexService {
 			showProducts.add(showProduct);
 		}
 		return showProducts;
+	}
+
+	@Override
+	public List<ShowProduct> searchProName(String proName, Integer pageNo, Integer pageSize) {
+		int index = (pageNo - 1) * pageSize;
+		List<ShowProduct> itemsPage = getShowProductByPro(proDao.getProsByNamePage(proName, index, pageSize));
+		return itemsPage;
+	}
+
+	@Override
+	public List<ShowProduct> searchType(Integer catalogId, Integer pageNo, Integer pageSize) {
+		int index = (pageNo - 1) * pageSize;
+		List<ShowProduct> itemsPage;
+		if (catalogId == -1) {
+			itemsPage = getShowProductByPro(proDao.getAllProsByPage(index, pageSize));
+		} else {
+			itemsPage = getShowProductByPro(proDao.getProsByCatalogIdPage(catalogId, index, pageSize));
+		}
+
+		return itemsPage;
+	}
+
+	@Override
+	public int getProMaxPageType(Integer catalogId, int pageSize) {
+		int maxPage = 1;
+		if (catalogId == -1) {
+			maxPage = (proDao.getAllPros().size() + pageSize - 1) / pageSize;
+		} else {
+			maxPage = (proDao.getProsByCatalogId(catalogId).size() + pageSize - 1) / pageSize;
+		}
+		return maxPage;
+	}
+
+	@Override
+	public int getProMaxPageProName(String proName, int pageSize) {
+		int maxPage = (proDao.getProsByName(proName).size() + pageSize - 1) / pageSize;
+		return maxPage;
 	}
 
 }

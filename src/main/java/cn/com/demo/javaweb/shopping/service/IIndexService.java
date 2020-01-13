@@ -16,7 +16,11 @@ public interface IIndexService {
 
 	public boolean deleteShopCarItem(int userId, int proId);
 
-	public List<ShowProduct> searchProName(String proName);
+	public List<ShowProduct> searchProName(String proName, Integer pageNo, Integer pageSize);
 
-	public List<ShowProduct> searchType(Integer catalogId);
+	public List<ShowProduct> searchType(Integer catalogId, Integer pageNo, Integer pageSize);
+
+	public int getProMaxPageType(Integer catalogId, int pageSize);
+
+	public int getProMaxPageProName(String proName, int pageSize);
 }

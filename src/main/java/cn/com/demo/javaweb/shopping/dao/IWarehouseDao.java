@@ -3,6 +3,7 @@ package cn.com.demo.javaweb.shopping.dao;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -23,4 +24,10 @@ public interface IWarehouseDao {
 
 	@Select({ "select num from warehouse where id = #{id}" })
 	public Integer getWarehouseNum(int id);
+
+	@Select({ "select * from warehouse where proId = #{proId}" })
+	public Warehouse getWarehouseByProId(int proId);
+
+	@Insert({ "insert into warehouse (proId,num) values (#{param1},#{param2}) " })
+	public boolean insertWarehouse(int proId, int num);
 }

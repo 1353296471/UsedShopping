@@ -3,13 +3,15 @@ package cn.com.demo.mvc.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.com.demo.javaweb.shopping.service.ISingleService;
 import cn.com.single.servlet.AddCommentServlet;
 import cn.com.single.servlet.CommentCountServlet;
 import cn.com.single.servlet.CommentProNameServlet;
-import cn.com.single.servlet.GetWareIdUsedServlet;
 import cn.com.single.servlet.ProCommentServlet;
 import cn.com.single.servlet.ProImgServlet;
 import cn.com.single.servlet.ProductDesServlet;
@@ -82,13 +84,18 @@ public class SingleControllerUsed {
 		s.service(request, response);
 	}
 
+	@Autowired
+	private ISingleService singleService;
+
+	@ResponseBody
 	@RequestMapping("/getWareIdServlet")
-	public void getWareIdServlet(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public Integer getWareIdServlet(HttpServletRequest request, HttpServletResponse response) throws Exception {
 //		GetWareIdServlet s = new GetWareIdServlet();
 //		s.service(request, response);
-
-		GetWareIdUsedServlet s = new GetWareIdUsedServlet();
-		s.service(request, response);
+		int proId = Integer.parseInt((String) request.getSession().getAttribute("proId"));
+		int wareId = 0;
+		wareId = singleService.getWarehouseIdByProId(proId);
+		return wareId;
 
 	}
 }

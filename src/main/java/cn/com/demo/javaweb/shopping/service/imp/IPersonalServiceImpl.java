@@ -180,14 +180,22 @@ public class IPersonalServiceImpl implements IPersonalService {
 			ProDes proDes = new ProDes();
 			proDes.setProDes(showProductAdmin.getProDes());
 
+			// 添加商品表
 			proDao.addProductBackId(pro);
 			int proId = pro.getId();
-			System.out.println("proId" + proId);
+			System.out.println("proId = " + proId);
 
+			// 添加库存表和描述表
 			if (proId != 0) {
-				proDes.setProDesPkid(proId);
-				proDesDao.addProDes(proDes);
 
+				proDes.setProDesPkid(proId);
+
+				if (!warehouseDao.insertWarehouse(proId, 1) || !proDesDao.addProDes(proDes)) {
+					throw new RuntimeException();
+				}
+
+			} else {
+				throw new RuntimeException();
 			}
 
 			// String imgUrl = "";
@@ -223,8 +231,9 @@ public class IPersonalServiceImpl implements IPersonalService {
 				img.setImgUrl(imgName);
 				img.setProId(proId);
 				img.setType(1);
-				imgDao.addImg(img);
-
+				if (!imgDao.addImg(img)) {
+					throw new RuntimeException();
+				}
 				// 将文件流写入到磁盘中
 				System.out.println(dir + "--" + imgName);
 				FileUtils.writeByteArrayToFile(new File(dir, imgName), file.getBytes());
@@ -233,6 +242,7 @@ public class IPersonalServiceImpl implements IPersonalService {
 			flag = true;
 		} catch (Exception e) {
 			// TODO 自动生成的 catch 块
+			flag = false;
 			e.printStackTrace();
 		}
 		return flag;

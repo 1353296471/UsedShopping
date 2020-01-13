@@ -98,4 +98,17 @@ public class CheckoutController {
 
 		return checkoutService.getWarehouseNumById(warehouseId);
 	}
+
+	@ResponseBody
+	@RequestMapping("/sureMoney/{warehouseId}/{num}")
+	public Boolean sureMoney(HttpSession session, @PathVariable("warehouseId") Integer warehouseId,
+			@PathVariable("num") Integer num) {
+		Boolean flag = false;
+		User user = (User) session.getAttribute("user");
+		double price = checkoutService.getPrice(warehouseId, num);
+		if (price <= user.getMoney()) {
+			flag = true;
+		}
+		return flag;
+	}
 }

@@ -8,7 +8,7 @@ function isLogin() {
 		// async 设置为 false，则所有的请求均为同步请求，在没有返回值之前，
 		// 同步请求将锁住浏览器，用户其它操作必须等待请求完成才可以执行。
 		type : 'post',
-		url : 'isLogin',
+		url : '/isLogin',
 		success : function(msg) {
 			if (msg == "isLogin") {
 				flag = true;
@@ -25,7 +25,7 @@ function isAdmin() {
 	$.ajax({
 		async : false,
 		type : 'post',
-		url : 'isAdmin',
+		url : '/isAdmin',
 		success : function(msg) {
 			if (msg == "isAdmin") {
 				flag = true;
@@ -53,20 +53,30 @@ function init() {
 	if (isLogin()) {
 		$.ajax({
 			type : 'post',
-			url : 'getUser',
+			url : '/getUser',
 			success : function(user) {
 				$("#account").html("欢迎："+user.userName);
-				$('#account').attr('href', 'personal.html');
+				$('#account').attr('href', '/personal.html');
 				$(".active").append($("<a></a>").append(" 退出").attr("href","logOut"));
 			}
 		});
 	}
 	
+	// 初始化分类列表
 	$.ajax({
 		type : 'post',
-		url : 'getTypes',
+		url : '/getTypes',
 		success : function(msg) {
 			$(".skyblue").html(msg);
+		}
+	});
+	
+	// 初始化搜索框
+	$.ajax({
+		type : 'post',
+		url : '/initSearch',
+		success : function(msg) {
+			$(".search").html(msg);
 		}
 	});
 	
@@ -77,7 +87,7 @@ function initAdmin() {
 	if (isAdmin()) {
 		$.ajax({
 			type : 'post',
-			url : 'getAdmin',
+			url : '/getAdmin',
 			success : function(admin) {
 				$("#account").html("欢迎管理员："+admin.adminName);
 				$('#account').attr('href', '#');
@@ -96,7 +106,7 @@ function toAddShopCar(warehouseId) {
 	if (isLogin()) {
 		$.ajax({
 			type : 'post',
-			url : 'addShopCarItem/' + warehouseId,
+			url : '/addShopCarItem/' + warehouseId,
 			success : function(countMsg) {
 				swal(countMsg);
 			}
@@ -116,7 +126,7 @@ function toAddShopCar(warehouseId,num) {
 	if (isLogin()) {
 		$.ajax({
 			type : 'post',
-			url : 'addShopCarItem/' + warehouseId + '/'+num,
+			url : '/addShopCarItem/' + warehouseId + '/'+num,
 			success : function(countMsg) {
 				swal(countMsg);
 			}
@@ -131,7 +141,7 @@ function toShowShopCarItem() {
 	if (isLogin()) {
 		$.ajax({
 			type : 'post',
-			url : 'showShopCar',
+			url : '/showShopCar',
 			success : function(msg) {
 				$("#shopCarItemListDiv").html(msg);
 			}
@@ -157,7 +167,7 @@ function deletePro(warehouseId) {
 	    case "defeat":
 	      $.ajax({
 				type : 'post',
-				url : 'deleteShopCarItem/' + warehouseId,
+				url : '/deleteShopCarItem/' + warehouseId,
 				success : function(countMsg) {
 					if (countMsg == "操作成功！") {
 						swal("删除成功！");
@@ -176,7 +186,7 @@ function deletePro(warehouseId) {
 	// if (r == true) {
 	// $.ajax({
 	// type : 'post',
-	// url : 'deleteShopCarItem/' + proId,
+	// url : '/deleteShopCarItem/' + proId,
 	// success : function(countMsg) {
 	// if (countMsg == "操作成功！") {
 	// swal("删除成功！");
@@ -354,7 +364,7 @@ function getStatus() {
 	$.ajax({
 		async : false,
 		type : 'post',
-		url : 'getStatus',
+		url : '/getStatus',
 		success : function(msg) {
 			status = msg;
 		}
@@ -372,4 +382,14 @@ $(document).on("click","#meun",function(){
 
 function toCheckout(){
 	window.location.href = "checkout.html";
+}
+
+function toSearchPage(pageNo){
+	$.ajax({
+		type : 'post',
+		url : '/toSearchPage/' + pageNo,
+		success : function(msg) {
+			$("#serPro").html(msg);
+		}
+	});
 }

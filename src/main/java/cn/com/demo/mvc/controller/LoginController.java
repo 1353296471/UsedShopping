@@ -47,6 +47,8 @@ public class LoginController {
 		} else {
 			session.setAttribute("user", loginService.getUser(user));
 			session.setAttribute("status", "user");
+			User u = (User) session.getAttribute("user");
+			System.out.println("session user = " + u);
 			flag = true;
 		}
 		return flag;

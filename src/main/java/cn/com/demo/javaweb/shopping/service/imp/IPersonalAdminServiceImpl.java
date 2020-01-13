@@ -201,10 +201,14 @@ public class IPersonalAdminServiceImpl implements IPersonalAdminService {
 			if (proDesDao.getProDes(showProductAdmin.getProId()) != null) {
 				if (proDesDao.updateProDes(proDes) && proDao.updateProduct(pro)) {
 					flag = true;
+				} else {
+					throw new RuntimeException();
 				}
 			} else {
 				if (proDesDao.addProDes(proDes) && proDao.updateProduct(pro)) {
 					flag = true;
+				} else {
+					throw new RuntimeException();
 				}
 			}
 
@@ -242,8 +246,9 @@ public class IPersonalAdminServiceImpl implements IPersonalAdminService {
 				img.setImgUrl(imgName);
 				img.setProId(proId);
 				img.setType(1);
-				imgDao.removeMainImg(proId);
-				imgDao.addImg(img);
+				if (!imgDao.removeMainImg(proId) || !imgDao.addImg(img)) {
+					throw new RuntimeException();
+				}
 
 				// 将文件流写入到磁盘中
 				System.out.println(dir + "--" + imgName);
@@ -252,6 +257,7 @@ public class IPersonalAdminServiceImpl implements IPersonalAdminService {
 			}
 		} catch (Exception e) {
 			// TODO 自动生成的 catch 块
+			flag = false;
 			e.printStackTrace();
 		}
 		return flag;
