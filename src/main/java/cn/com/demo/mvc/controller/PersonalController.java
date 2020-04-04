@@ -117,4 +117,10 @@ public class PersonalController {
 		return model;
 	}
 
+	@RequestMapping("/getAllTypes")
+	@ResponseBody
+	public List<Catalog> getAllTypes() throws Exception {
+		return personalService.getAllCatalogs();
+	}
+
 }

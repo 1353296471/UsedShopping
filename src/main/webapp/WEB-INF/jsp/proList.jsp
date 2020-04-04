@@ -13,10 +13,10 @@ $(function () {
 	})
 })
 
-$(document).ready(function() {
+	$(document).ready(function() {
 		$.ajax({
 			type : 'post',
-			url : 'getTypes',
+			url : 'getAllTypes',
 			success : function(data) {
 				for (var i = 0; i < data.length; i++) {  
                     var option = document.createElement("option");  
